@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\DashbaordController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard.pages.index');
-});
+Route::get('/', [DashbaordController::class, 'index']);
