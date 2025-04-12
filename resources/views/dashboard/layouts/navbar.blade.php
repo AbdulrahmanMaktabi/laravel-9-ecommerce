@@ -11,6 +11,12 @@
              </li>
              <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
              <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+             <form action="logout" method="POST">
+                 @csrf
+                 <li class="nav-item d-none d-md-block">
+                     <input type="submit" value="Logout" class="text-danger nav-link">
+                 </li>
+             </form>
          </ul>
          <!--end::Start Navbar Links-->
          <!--begin::End Navbar Links-->
@@ -141,7 +147,7 @@
                  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                      <img src="../../dist/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow"
                          alt="User Image" />
-                     <span class="d-none d-md-inline">Alexander Pierce</span>
+                     <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
                  </a>
                  <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                      <!--begin::User Image-->
@@ -149,7 +155,7 @@
                          <img src="../../dist/assets/img/user2-160x160.jpg" class="rounded-circle shadow"
                              alt="User Image" />
                          <p>
-                             Alexander Pierce - Web Developer
+                             {{ Auth::user()->name }} - Web Developer
                              <small>Member since Nov. 2023</small>
                          </p>
                      </li>
