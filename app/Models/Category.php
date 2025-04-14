@@ -11,7 +11,7 @@ class Category extends Model
 
     protected $table = "categories";
 
-    protected $guareded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     // 🧭 Parent category
     public function parent()

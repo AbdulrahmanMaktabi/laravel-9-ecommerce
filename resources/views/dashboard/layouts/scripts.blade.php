@@ -220,4 +220,18 @@
         const sparkline3 = new ApexCharts(document.querySelector('#sparkline-3'), option_sparkline3);
         sparkline3.render();
     </script>
+    <script src="https://cdn.tiny.cloud/1/uhpj4hv0cq8ydkcrgg5m1r8ggbr9crbhoip7trw4vhezgnfu/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#editor',
+            plugins: [
+                'lists', 'link', 'image', 'table', 'code', 'autolink', 'media', 'wordcount'
+            ],
+            toolbar: 'undo redo | bold italic underline | bullist numlist | link image media table | code',
+            menubar: false,
+            branding: false,
+            height: 300,
+        });
+    </script>
     <!--end::Script-->
