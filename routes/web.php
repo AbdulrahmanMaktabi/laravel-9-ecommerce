@@ -34,5 +34,6 @@ Route::prefix('/dashboard')
 
         // Categories Routes
         Route::resource('categories', CategoryController::class);
+        Route::put('category/update/status/to/archived/{category}', [CategoryController::class, 'updateStatusToArchived'])->name('categories.updateStatusToArchived');
     });
 require __DIR__ . '/auth.php';

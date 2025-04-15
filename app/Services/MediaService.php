@@ -13,7 +13,7 @@ class MediaService
             $image = $request->file($inputName);
             $ext = $image->getClientOriginalExtension();
             $imageName = $prefix . '_' . uniqid() . '.' . $ext;
-            $image->move(public_path('uploads'), $imageName);
+            $image->move(public_path($path), $imageName);
             return '/' . $path . '/' . $imageName;
         }
         return null;
@@ -29,7 +29,7 @@ class MediaService
             foreach ($images as $image) {
                 $ext = $image->getClientOriginalExtension();
                 $imageName = $prefix . '_' . uniqid() . '.' . $ext;
-                $image->move(public_path('uploads'), $imageName);
+                $image->move(public_path($path), $imageName);
                 $paths[] = '/' . $path . '/' . $imageName;
             }
             return $paths;
@@ -37,7 +37,7 @@ class MediaService
         return null;
     }
 
-    public static function updateImage(Request $request, $inputName, $path = 'uploads', $prefix = 'media', $oldPath = null)
+    public static function updateImage(Request $request, $inputName, $oldPath = null, $path = 'uploads', $prefix = 'media')
     {
         if ($request->hasFile($inputName)) {
             if (File::exists(public_path($oldPath))) {
@@ -47,7 +47,7 @@ class MediaService
             $image = $request->file($inputName);
             $ext = $image->getClientOriginalExtension();
             $imageName = $prefix . '_' . uniqid() . '.' . $ext;
-            $image->move(public_path('uploads'), $imageName);
+            $image->move(public_path($path), $imageName);
             return '/' . $path . '/' . $imageName;
         }
         return null;

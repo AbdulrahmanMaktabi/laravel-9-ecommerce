@@ -16,7 +16,7 @@
                 <div class="card-title">Edit {{ $category->name }}</div>
             </div>
 
-            <form action="{{ route('categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('categories.update', $category) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="card-body">
@@ -37,8 +37,9 @@
                         <label for="parent_id" class="form-label">Parent Category</label>
                         <select name="parent_id" id="parent_id" class="form-select">
                             <option value="">-- No Parent (Main Category) --</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id }}"
+                                    {{ $cat->id == $category->parent->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                             @endforeach
                         </select>
                         @error('parent_id')
@@ -52,6 +53,8 @@
                     <div class="mb-3">
                         <label for="image" class="form-label">Category Image</label>
                         <input type="file" name="image" id="image" class="form-control" />
+                        <span class="text-uppercase text-danger">if u dont upload new image the old image will
+                            keep</span>
                         @error('image')
                             <div class="invalid-feedback d-block">
                                 {{ $message }}
@@ -62,7 +65,7 @@
                     <!-- Description -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <textarea id="editor" name="description">{{ old('description') }}</textarea>
+                        <textarea id="editor" name="description">{{ old('description', $category->description) }}</textarea>
                         @error('description')
                             <div class="invalid-feedback d-block">
                                 {{ $message }}
@@ -75,9 +78,11 @@
                         <label for="status" class="form-label">Status</label>
                         <select name="status" id="status" class="form-select">
                             <option value="">-- No Status --</option>
-                            <option value="active">active</option>
-                            <option value="inactive">inactive</option>
-                            <option value="archived">archived</option>
+                            <option {{ $category->status == 'active' ? 'selected' : '' }} value="active">active</option>
+                            <option {{ $category->status == 'inactive' ? 'selected' : '' }} value="inactive">inactive
+                            </option>
+                            <option {{ $category->status == 'archived' ? 'selected' : '' }} value="archived">archived
+                            </option>
                         </select>
                         @error('parent_id')
                             <div class="invalid-feedback d-block">
@@ -87,7 +92,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
             </form>
         </div>

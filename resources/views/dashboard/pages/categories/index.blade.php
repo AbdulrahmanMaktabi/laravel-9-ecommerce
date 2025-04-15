@@ -60,9 +60,22 @@
 
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                        <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                        <button type="button" class="btn btn-warning btn-sm">Archive</button>
+                                        <a href="{{ route('categories.edit', $category) }}"
+                                            class="btn btn-primary btn-sm">Edit</a>
+                                        <form action="{{ route('categories.destroy', $category) }}" method="POST">
+                                            @csrf
+                                            @method('delete')
+                                            <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
+                                                value="Delete" />
+                                        </form>
+                                        <form action="{{ route('categories.updateStatusToArchived', $category) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('put')
+                                            <input type="submit" class="btn btn-warning btn-sm"
+                                                style="border-top-left-radius:0;border-bottom-left-radius:0;"
+                                                value="Archive" />
+                                        </form>
                                     </div>
 
                                 </td>

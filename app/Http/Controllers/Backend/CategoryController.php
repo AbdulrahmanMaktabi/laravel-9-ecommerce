@@ -10,6 +10,14 @@ use App\Facades\Media;
 
 class CategoryController extends Controller
 {
+    protected $categories;
+
+    public function __construct()
+    {
+        $this->categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+            ->with(['parent', 'children'])
+            ->paginate(10);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +25,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(10);
+        $categories = $this->categories;
 
         return view('dashboard.pages.categories.index', get_defined_vars());
     }
@@ -29,7 +37,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = $this->categories;
         return view('dashboard.pages.categories.create', get_defined_vars());
     }
 
@@ -77,34 +85,71 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Category $category
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        $categories = $this->categories;
+        return view('dashboard.pages.categories.edit', get_defined_vars());
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Category $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name'      => ['required'],
+            'parent_id' => ['nullable', 'exists:categories,id'],
+            'image'     => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'status'    => ['required'],
+            'description' => ['required']
+        ]);
+
+        if ($request->has('image')) {
+            $imageLocation = Media::updateImage($request, 'image', $category->image, 'uploads\categories', 'categories');
+            $category->update(['image' => $imageLocation]);
+        }
+
+        $category->update([
+            'name'      => $request->input('name'),
+            'slug'      => Str::slug($request->name),
+            'status'    => $request->input('status'),
+            'parent_id' => $request->input('parent_id'),
+            'description' => $request->input('description')
+        ]);
+
+        return redirect()->route('categories.index')->with('success', 'Category Updated Successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Category $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        if ($category->image) {
+            Media::deleteImage($category->image);
+        }
+
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully');
+    }
+
+    /**
+     * Update Status of category to archived
+     */
+    public function updateStatusToArchived(Category $category)
+    {
+        $category->update(['status' => 'archived']);
+        return redirect()->route('categories.index')->with('success', 'Category Status Updated Successfully');
     }
 }
