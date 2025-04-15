@@ -73,9 +73,9 @@
                         <label for="status" class="form-label">Status</label>
                         <select name="status" id="status" class="form-select">
                             <option value="">-- No Status --</option>
-                            <option value="active">active</option>
-                            <option value="inactive">inactive</option>
-                            <option value="archived">archived</option>
+                            <option @selected(@old('status' == 'active')) value="active">active</option>
+                            <option @selected(@old('status' == 'inactive')) value="inactive">inactive</option>
+                            <option @selected(@old('status' == 'archived')) value="archived">archived</option>
                         </select>
                         @error('parent_id')
                             <div class="invalid-feedback d-block">

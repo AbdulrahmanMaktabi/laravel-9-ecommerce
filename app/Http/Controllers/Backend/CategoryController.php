@@ -10,14 +10,7 @@ use App\Facades\Media;
 
 class CategoryController extends Controller
 {
-    protected $categories;
 
-    public function __construct()
-    {
-        $this->categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
-            ->with(['parent', 'children'])
-            ->paginate(10);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +18,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = $this->categories;
+        $categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+            ->with(['parent', 'children'])
+            ->paginate(10);;
 
         return view('dashboard.pages.categories.index', get_defined_vars());
     }
@@ -37,7 +32,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = $this->categories;
+        $categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+            ->with(['parent', 'children'])
+            ->get();
+
         return view('dashboard.pages.categories.create', get_defined_vars());
     }
 
@@ -72,17 +70,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  Category $category
@@ -90,7 +77,16 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        $categories = $this->categories;
+        $categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+            ->with(['parent', 'children'])
+            ->where('id', '<>', $category->id)
+            ->where(function ($query) use ($category) {
+                $query->whereNull('parent_id')
+                    ->orWhere('parent_id', '<>', $category->id);
+            })
+            ->get();
+
+
         return view('dashboard.pages.categories.edit', get_defined_vars());
     }
 

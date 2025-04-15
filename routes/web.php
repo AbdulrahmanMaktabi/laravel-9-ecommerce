@@ -33,7 +33,8 @@ Route::prefix('/dashboard')
         Route::get('/', [DashbaordController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
         // Categories Routes
-        Route::resource('categories', CategoryController::class);
+        Route::resource('categories', CategoryController::class)->except('show');
         Route::put('category/update/status/to/archived/{category}', [CategoryController::class, 'updateStatusToArchived'])->name('categories.updateStatusToArchived');
     });
+
 require __DIR__ . '/auth.php';

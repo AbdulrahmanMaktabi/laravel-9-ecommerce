@@ -38,8 +38,8 @@
                         <select name="parent_id" id="parent_id" class="form-select">
                             <option value="">-- No Parent (Main Category) --</option>
                             @foreach ($categories as $cat)
-                                <option value="{{ $cat->id }}"
-                                    {{ $cat->id == $category->parent->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                <option value="{{ $cat->id }}" @selected($cat->id == $category->parent?->id)>{{ $cat->name }}
+                                </option>
                             @endforeach
                         </select>
                         @error('parent_id')
@@ -78,10 +78,10 @@
                         <label for="status" class="form-label">Status</label>
                         <select name="status" id="status" class="form-select">
                             <option value="">-- No Status --</option>
-                            <option {{ $category->status == 'active' ? 'selected' : '' }} value="active">active</option>
-                            <option {{ $category->status == 'inactive' ? 'selected' : '' }} value="inactive">inactive
+                            <option @selected($category->status == 'active') value="active">active</option>
+                            <option @selected($category->status == 'inactive') value="inactive">inactive
                             </option>
-                            <option {{ $category->status == 'archived' ? 'selected' : '' }} value="archived">archived
+                            <option @selected($category->status == 'archived') value="archived">archived
                             </option>
                         </select>
                         @error('parent_id')
