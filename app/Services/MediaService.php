@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class MediaService
 {
@@ -11,10 +14,25 @@ class MediaService
     {
         if ($request->hasFile($inputName)) {
             $image = $request->file($inputName);
+
+            $validator = Validator::make(
+                ['image' => $image],
+                ['image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048']
+            );
+
+            if ($validator->fails()) {
+                $errorMessage = $validator->errors()->first('image');
+
+                \Log::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
+
+                return redirect()->back()->with('message', $errorMessage);
+            }
+
             $ext = $image->getClientOriginalExtension();
             $imageName = $prefix . '_' . uniqid() . '.' . $ext;
-            $image->move(public_path($path), $imageName);
-            return '/' . $path . '/' . $imageName;
+
+            $imagePath = $image->storeAs($path, $imageName, 'public');
+            return Storage::url($imagePath);
         }
         return null;
     }
@@ -27,10 +45,24 @@ class MediaService
             $images = $request->file($inputName);
 
             foreach ($images as $image) {
+                $validator = Validator::make(
+                    ['image' => $image],
+                    ['image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048']
+                );
+
+                if ($validator->fails()) {
+                    $errorMessage = $validator->errors()->first('image');
+
+                    \Log::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
+
+                    return redirect()->back()->with('message', $errorMessage);
+                }
+
                 $ext = $image->getClientOriginalExtension();
                 $imageName = $prefix . '_' . uniqid() . '.' . $ext;
-                $image->move(public_path($path), $imageName);
-                $paths[] = '/' . $path . '/' . $imageName;
+
+                $imagePath = $image->storeAs($path, $imageName, 'public');
+                $paths[] = Storage::url($imagePath);
             }
             return $paths;
         }
@@ -40,23 +72,45 @@ class MediaService
     public static function updateImage(Request $request, $inputName, $oldPath = null, $path = 'uploads', $prefix = 'media')
     {
         if ($request->hasFile($inputName)) {
-            if (File::exists(public_path($oldPath))) {
-                File::delete(public_path($oldPath));
+            if ($oldPath && Storage::exists($oldPath)) {
+                Storage::delete($oldPath);
             }
 
             $image = $request->file($inputName);
+
+            $validator = Validator::make(
+                ['image' => $image],
+                ['image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048']
+            );
+
+            if ($validator->fails()) {
+                $errorMessage = $validator->errors()->first('image');
+
+                \Log::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
+
+                return redirect()->back()->with('message', $errorMessage);
+            }
+
             $ext = $image->getClientOriginalExtension();
             $imageName = $prefix . '_' . uniqid() . '.' . $ext;
-            $image->move(public_path($path), $imageName);
-            return '/' . $path . '/' . $imageName;
+
+            $imagePath = $image->storeAs($path, $imageName, 'public');
+            return Storage::url($imagePath);
         }
         return null;
     }
 
-    public function deleteImage($path)
+    public static function deleteImage($path)
     {
-        if (File::exists(public_path($path))) {
-            File::delete(public_path($path));
+        $correctPath = str_replace('\\', '/', $path);
+
+        $pathToDelete = str_replace('/storage', 'public', $correctPath);
+
+        if (Storage::exists($pathToDelete)) {
+            Storage::delete($pathToDelete);
+            return true;
         }
+
+        return null;
     }
 }

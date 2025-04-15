@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Facades\Media;
+use Exception;
 
 class CategoryController extends Controller
 {
@@ -131,11 +132,16 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        try {
+            $category->delete();
+        } catch (Exception $e) {
+            \Log::error('Category deletion failed:' . $e->getMessage());
+            return redirect()->back();
+        }
+
         if ($category->image) {
             Media::deleteImage($category->image);
         }
-
-        $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully');
     }
