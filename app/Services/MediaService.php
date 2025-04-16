@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Facades\Loggy;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class MediaService
 {
@@ -23,7 +25,7 @@ class MediaService
             if ($validator->fails()) {
                 $errorMessage = $validator->errors()->first('image');
 
-                \Log::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
+                Loggy::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
 
                 return redirect()->back()->with('message', $errorMessage);
             }
@@ -53,7 +55,7 @@ class MediaService
                 if ($validator->fails()) {
                     $errorMessage = $validator->errors()->first('image');
 
-                    \Log::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
+                    Loggy::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
 
                     return redirect()->back()->with('message', $errorMessage);
                 }
@@ -80,13 +82,13 @@ class MediaService
 
             $validator = Validator::make(
                 ['image' => $image],
-                ['image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048']
+                ['image' => 'image|mimes:jpeg,png,jpg,gif,svg']
             );
 
             if ($validator->fails()) {
                 $errorMessage = $validator->errors()->first('image');
 
-                \Log::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
+                Loggy::error('Can not upload image ' . Carbon::now() . '. Error: ' . $errorMessage);
 
                 return redirect()->back()->with('message', $errorMessage);
             }

@@ -99,8 +99,16 @@
                 <!-- /.card-body -->
             </div>
             @if (session()->has('success'))
-                <div class="alert alert-success alert-top-right" role="alert">
-                    {{ session('success') }}
-                </div>
+                @push('scripts')
+                    <script>
+                        notyf.success("{{ session('success') }}");
+                    </script>
+                @endpush
+            @elseif (session()->has('error'))
+                @push('scripts')
+                    <script>
+                        notyf.error("{{ session('error') }}");
+                    </script>
+                @endpush
             @endif
         @endsection

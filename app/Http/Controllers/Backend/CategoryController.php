@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Facades\Media;
+use App\Facades\Loggy;
 use Exception;
 
 class CategoryController extends Controller
@@ -23,6 +24,11 @@ class CategoryController extends Controller
             ->with(['parent', 'children'])
             ->paginate(10);;
 
+        if (!$categories) {
+            Loggy::error('Can`t load categories');
+            return redirect()->back()->while('error', 'can`t load categories');
+        }
+
         return view('dashboard.pages.categories.index', get_defined_vars());
     }
 
@@ -36,6 +42,10 @@ class CategoryController extends Controller
         $categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
             ->with(['parent', 'children'])
             ->get();
+
+        if (!$categories) {
+            Loggy::error('Can`t load categories');
+        }
 
         return view('dashboard.pages.categories.create', get_defined_vars());
     }
@@ -51,7 +61,7 @@ class CategoryController extends Controller
         $request->validate([
             'name'      => ['required'],
             'parent_id' => ['nullable', 'exists:categories,id'],
-            'image'     => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'image'     => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif'],
             'status'    => ['required'],
             'description' => ['required']
         ]);
@@ -135,7 +145,7 @@ class CategoryController extends Controller
         try {
             $category->delete();
         } catch (Exception $e) {
-            \Log::error('Category deletion failed:' . $e->getMessage());
+            Loggy::error('Category deletion failed:' . $e->getMessage());
             return redirect()->back();
         }
 

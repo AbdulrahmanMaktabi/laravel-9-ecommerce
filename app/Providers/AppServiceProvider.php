@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\LogService;
 use Illuminate\Support\ServiceProvider;
 use App\Services\MediaService;
 
@@ -16,6 +17,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton('media', function ($app) {
             return new MediaService();
+        });
+
+        $this->app->singleton('loggy', function ($app) {
+            return new LogService();
         });
     }
 

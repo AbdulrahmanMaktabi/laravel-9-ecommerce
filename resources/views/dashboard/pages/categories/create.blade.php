@@ -91,4 +91,27 @@
         </div>
 
     </div>
+    @if ($errors->any())
+        @push('scripts')
+            <script>
+                @foreach ($errors->all() as $error)
+                    notyf.error(@json($error));
+                @endforeach
+            </script>
+        @endpush
+    @endif
+
+    @if (session()->has('success'))
+        @push('scripts')
+            <script>
+                notyf.success("{{ session('success') }}");
+            </script>
+        @endpush
+    @elseif (session()->has('error'))
+        @push('scripts')
+            <script>
+                notyf.error("{{ session('error') }}");
+            </script>
+        @endpush
+    @endif
 @endsection

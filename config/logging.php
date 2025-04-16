@@ -57,6 +57,18 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'error_single' => [
+            'driver'    => 'single',
+            'path'      => storage_path('logs/errors.log'),
+            'level'     => 'error',
+        ],
+
+        'success_single' => [
+            'driver'    => 'single',
+            'path'      => storage_path('logs/success.log'),
+            'level'     => 'info',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
@@ -85,7 +97,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
         ],
 

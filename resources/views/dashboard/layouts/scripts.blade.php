@@ -234,4 +234,16 @@
             height: 300,
         });
     </script>
+    {{-- Notfy --}}
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script>
+        var notyf = new Notyf({
+            duration: 3000,
+            position: {
+                x: 'right',
+                y: 'bottom',
+            },
+        });
+    </script>
+    @stack('scripts')
     <!--end::Script-->
