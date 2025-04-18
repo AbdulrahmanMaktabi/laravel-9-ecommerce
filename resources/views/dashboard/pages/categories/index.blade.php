@@ -31,7 +31,7 @@
                     <tbody>
                         @forelse ($categories as $category)
                             <tr class="align-middle">
-                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $category->name }}</td>
                                 <td>
                                     <span class="badge text-bg-primary">
