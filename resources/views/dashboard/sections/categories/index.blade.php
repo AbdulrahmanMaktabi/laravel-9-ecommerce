@@ -98,17 +98,8 @@
                 </div>
                 <!-- /.card-body -->
             </div>
-            @if (session()->has('success'))
-                @push('scripts')
-                    <script>
-                        notyf.success("{{ session('success') }}");
-                    </script>
-                @endpush
-            @elseif (session()->has('error'))
-                @push('scripts')
-                    <script>
-                        notyf.error("{{ session('error') }}");
-                    </script>
-                @endpush
-            @endif
+
+            // Notifications
+            <x-dashboard.notyf-alert session="success" />
+            <x-dashboard.notyf-alert session="error" />
         @endsection

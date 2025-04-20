@@ -29,7 +29,7 @@ class CategoryController extends Controller
             return redirect()->back()->while('error', 'can`t load categories');
         }
 
-        return view('dashboard.pages.categories.index', get_defined_vars());
+        return view('dashboard.sections.categories.index', get_defined_vars());
     }
 
     /**
@@ -47,7 +47,7 @@ class CategoryController extends Controller
             Loggy::error('Can`t load categories');
         }
 
-        return view('dashboard.pages.categories.create', get_defined_vars());
+        return view('dashboard.sections.categories.create', get_defined_vars());
     }
 
     /**
@@ -98,7 +98,7 @@ class CategoryController extends Controller
             ->get();
 
 
-        return view('dashboard.pages.categories.edit', get_defined_vars());
+        return view('dashboard.sections.categories.edit', get_defined_vars());
     }
 
     /**
