@@ -20,17 +20,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Category::query();
-
-        if ($name = $request->query('name')) {
-            $query->where('name', 'LIKE', "%$name%");
-        }
-
-        if ($status = $request->query('status')) {
-            $query->whereStatus($status);
-        }
-
-        $categories = $query->select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+        $categories = Category::Fillter($request->query())->select('id', 'name', 'status', 'image', 'parent_id', 'slug')
             ->with(['parent', 'children'])
             ->paginate(10);
 
