@@ -27,7 +27,7 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function scopeFillter($query, $filters)
+    public function scopeFilter($query, $filters)
     {
         if ($filters['name'] ?? false) {
             $query->where('name', 'LIKE', "%{$filters['name']}%");
@@ -36,6 +36,11 @@ class Category extends Model
         if ($filters['status'] ?? false) {
             $query->whereStatus($filters['status']);
         }
+    }
+
+    public function scopeTrashed($query)
+    {
+        $query->onlyTrashed();
     }
 
     public function getRouteKeyName()

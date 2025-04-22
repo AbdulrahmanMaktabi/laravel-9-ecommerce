@@ -20,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::Fillter($request->query())->select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+        $categories = Category::Filter($request->query())->select('id', 'name', 'status', 'image', 'parent_id', 'slug')
             ->with(['parent', 'children'])
             ->paginate(10);
 
@@ -30,6 +30,27 @@ class CategoryController extends Controller
         }
 
         return view('dashboard.sections.categories.index', get_defined_vars());
+    }
+
+    /**
+     * Display a listing of the resource only trashed
+     * 
+     * @return void
+     */
+    public function trash(Request $request)
+    {
+        $categories = Category::Filter($request->query())
+            ->Trashed()
+            ->select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+            ->with(['parent', 'children'])
+            ->paginate(10);
+
+        if (!$categories) {
+            Loggy::error('Can`t load categories');
+            return redirect()->back()->while('error', 'can`t load categories');
+        }
+
+        return view('dashboard.sections.categories.trashed', get_defined_vars());
     }
 
     /**
@@ -135,6 +156,50 @@ class CategoryController extends Controller
     }
 
     /**
+     * Restore trashed specified resource 
+     */
+    public function restore($category)
+    {
+        // Cat
+        if (!$category = Category::onlyTrashed()->where('slug', $category)->first()) {
+            Loggy::error('Category is not found');
+            return redirect()->back()->with('error', 'The category is not found');
+        }
+
+        try {
+            $category->restore();
+            return redirect()->back()->with('success', 'The Category is restored');
+        } catch (Exception $e) {
+            Loggy('Error With restoring Category: ' . $category . ' Message: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error with restoring the category: ' . $category->name);
+        }
+    }
+
+    /**
+     * Force Delete specified resource from storage.
+     */
+    public function forceDelete($category)
+    {
+        if (!$category = Category::onlyTrashed()->where('slug', $category)->first()) {
+            Loggy::error('Category is not found');
+            return redirect()->back()->with('error', 'Category is not found');
+        }
+
+        try {
+            $category->forceDelete();
+
+            if ($category->image) {
+                Media::deleteImage($category->image);
+            }
+            Loggy::success('Category Force Deleted Successfully , ' . $category);
+            return redirect()->back()->with('success', 'Category is force deleted');
+        } catch (Exception $e) {
+            Loggy('Error with Force Deleting the category: ' . $category . ' Message: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error with Force Deleting the category: ' . $category->name);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  Category $category
@@ -146,11 +211,7 @@ class CategoryController extends Controller
             $category->delete();
         } catch (Exception $e) {
             Loggy::error('Category deletion failed:' . $e->getMessage());
-            return redirect()->back();
-        }
-
-        if ($category->image) {
-            Media::deleteImage($category->image);
+            return redirect()->back()->with('error', 'Category deleted failed');
         }
 
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully');
