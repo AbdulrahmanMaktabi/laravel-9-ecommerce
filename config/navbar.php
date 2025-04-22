@@ -18,6 +18,11 @@ return [
                 'route'         => 'categories.index',
             ],
             [
+                'title'         => 'Trashed Categories',
+                'icon'          => 'bi bi-tags-fill',
+                'route'         => 'categories.trash',
+            ],
+            [
                 'title'         => 'Create New Category',
                 'icon'          => 'bi bi-bookmark-plus',
                 'route'         => 'categories.create',
