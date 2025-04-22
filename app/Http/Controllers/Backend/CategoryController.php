@@ -18,11 +18,21 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
+        $query = Category::query();
+
+        if ($name = $request->query('name')) {
+            $query->where('name', 'LIKE', "%$name%");
+        }
+
+        if ($status = $request->query('status')) {
+            $query->whereStatus($status);
+        }
+
+        $categories = $query->select('id', 'name', 'status', 'image', 'parent_id', 'slug')
             ->with(['parent', 'children'])
-            ->paginate(10);;
+            ->paginate(10);
 
         if (!$categories) {
             Loggy::error('Can`t load categories');

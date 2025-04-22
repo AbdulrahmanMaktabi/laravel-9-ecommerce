@@ -18,6 +18,26 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body p-0">
+                <form action="{{ URL::current() }}" method="get" class="row g-2 align-items-end mb-4 mt-2 px-2">
+                    <div class="col-md-6">
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Enter name"
+                            value="{{ request('name') ?? '' }}">
+                    </div>
+
+                    <div class="col-md-5">
+                        <select name="status" id="status" class="form-select">
+                            <option value="">All</option>
+                            <option value="active" @selected(request('status') == 'active')>Active</option>
+                            <option value="inactive" @selected(request('status') == 'inactive')>Inactive</option>
+                            <option value="archived" @selected(request('status') == 'archived')>Archived</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </form>
+
                 <table class="table">
                     <thead>
                         <tr>
@@ -91,7 +111,7 @@
 
                     </table>
                     <div class="container pt-4">
-                        {{ $categories->links('pagination::bootstrap-5') }}
+                        {{ $categories->withQueryString()->links('pagination::bootstrap-5') }}
 
                     </div>
 
@@ -99,7 +119,7 @@
                 <!-- /.card-body -->
             </div>
 
-            // Notifications
+            {{-- Notifications --}}
             <x-dashboard.notyf-alert session="success" />
             <x-dashboard.notyf-alert session="error" />
         @endsection
