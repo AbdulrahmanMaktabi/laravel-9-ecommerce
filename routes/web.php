@@ -33,6 +33,9 @@ Route::prefix('/dashboard')
         Route::get('/', [DashbaordController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
         // Categories Routes
+        Route::get('categories/trashed', [CategoryController::class, 'trash'])->name('categories.trash');
+        Route::put('categories/{category}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+        Route::delete('categories/{category}/force-delete', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
         Route::resource('categories', CategoryController::class)->except('show');
         Route::put('category/update/status/to/archived/{category}', [CategoryController::class, 'updateStatusToArchived'])->name('categories.updateStatusToArchived');
     });
