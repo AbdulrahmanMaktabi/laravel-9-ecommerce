@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Facades\Loggy;
 use App\Facades\Media;
 use App\Http\Requests\Dashboard\Product\ProductStoreRequest;
+use App\Http\Requests\Dashboard\Product\ProductUpdateRequest;
 use Exception;
 use Illuminate\Support\Str;
 use App\Models\Category;
@@ -125,17 +126,20 @@ class ProductController extends Controller
      * @param  Product $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $category)
+    public function edit(Product $product)
     {
-        $products = Product::select('id', 'name', 'status', 'image', 'parent_id', 'slug')
-            ->with(['parent', 'children'])
-            ->where('id', '<>', $category->id)
-            ->where(function ($query) use ($category) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', '<>', $category->id);
-            })
+        $categories = Category::with(['children', 'parent'])
             ->get();
 
+        $stores = Store::all();
+
+        if (!$categories) {
+            Loggy::error('Can`t load categories');
+        }
+
+        if (!$stores) {
+            Loggy::error('Can`t load stores');
+        }
 
         return view('dashboard.sections.products.edit', get_defined_vars());
     }
@@ -147,28 +151,27 @@ class ProductController extends Controller
      * @param  Product $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $category)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        $request->validate([
-            'name'      => ['required'],
-            'parent_id' => ['nullable', 'exists:products,id'],
-            'image'     => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'status'    => ['required'],
-            'description' => ['required']
-        ]);
+        $data = $request->validated();
 
         if ($request->has('image')) {
-            $imageLocation = Media::updateImage($request, 'image', $category->image, 'uploads\products', 'products');
-            $category->update(['image' => $imageLocation]);
+            $imageLocation = Media::updateImage($request, 'image', $product->image, 'uploads/products', 'products');
+            $product->update(['image' => $imageLocation]);
         }
 
-        $category->update([
-            'name'      => $request->input('name'),
-            'slug'      => Str::slug($request->name),
-            'status'    => $request->input('status'),
-            'parent_id' => $request->input('parent_id'),
-            'description' => $request->input('description')
-        ]);
+        unset($data['store']);
+        unset($data['category']);
+
+        $data['store_id'] = Store::where('slug', $request->store)->value('id');
+        $data['category_id'] = Category::where('slug', $request->category)->value('id');
+
+        try {
+            $product->update($data);
+        } catch (Exception $e) {
+            Loggy::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('products.index')->with('success', 'Product Updated Successfully');
     }

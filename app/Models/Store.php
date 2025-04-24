@@ -12,4 +12,12 @@ class Store extends Model
     protected $table = "stores";
 
     protected $guareded = ['id', 'created_at', 'updated_at'];
+
+    /**
+     * Relation with users table
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

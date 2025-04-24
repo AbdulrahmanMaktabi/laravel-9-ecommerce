@@ -10,7 +10,7 @@ class LogService
 {
     protected static function formatMessage($message)
     {
-        $user = Auth::check() ? 'User ID: ' . Auth::user() : 'Guest User';
+        $user = Auth::check() ? 'User ID: ' . Auth::user()->id : 'Guest User';
 
         return 'Time: ' . Carbon::now() . ' | ' . $user . ' | Message: ' . $message;
     }
