@@ -43,4 +43,20 @@ class Product extends Model
             $query->whereStatus($filters['status']);
         }
     }
+
+    /**
+     * Only trashed scope
+     */
+    public function scopeTrashed($query)
+    {
+        $query->onlyTrashed();
+    }
+
+    /**
+     * Route key name
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

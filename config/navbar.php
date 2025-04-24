@@ -25,7 +25,7 @@ return [
             [
                 'title'         => 'Create New Product',
                 'icon'          => 'bi bi-box-seam-fill',
-                'route'         => 'categories.create',
+                'route'         => 'products.create',
             ]
         ],
     ],

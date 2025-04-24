@@ -9,6 +9,8 @@ use App\Facades\Loggy;
 use App\Facades\Media;
 use Exception;
 use Illuminate\Support\Str;
+use App\Models\Category;
+use App\Models\Store;
 
 class ProductController extends Controller
 {
@@ -39,7 +41,7 @@ class ProductController extends Controller
     public function trash(Request $request)
     {
         $products = Product::Filter($request->query())
-            ->onlyTrashed()
+            ->Trashed()
             ->with(['store', 'category'])
             ->paginate(10);
 
@@ -58,11 +60,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $products = Product::with(['store', 'category'])
+        $categories = Category::with(['children', 'parent'])
             ->get();
 
-        if (!$products) {
-            Loggy::error('Can`t load products');
+        $stores = Store::all();
+
+        if (!$categories) {
+            Loggy::error('Can`t load categories');
+        }
+
+        if (!$stores) {
+            Loggy::error('Can`t load stores');
         }
 
         return view('dashboard.sections.products.create', get_defined_vars());
