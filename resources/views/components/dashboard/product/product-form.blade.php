@@ -1,6 +1,7 @@
 <form action="{{ route('products.' . $route, $product) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method($method)
+    <input type="hidden" name="store" value="{{ Auth::user()->store?->first()?->slug ?? 'no store' }}">
     <div class="card-body">
         <!-- Title -->
         <div class="mb-3">
@@ -20,7 +21,7 @@
             <select name="category" id="category" class="form-select">
                 <option value="">-- No Category --</option>
                 @foreach ($categories as $cat)
-                    <option value="{{ $cat->id }}" @selected($product->category?->id == $cat->id)>{{ $cat->name }}
+                    <option value="{{ $cat->slug }}" @selected($product->category?->id == $cat->id)>{{ $cat->name }}
                     </option>
                 @endforeach
             </select>
@@ -86,9 +87,9 @@
                 </div>
 
                 <div class="col-lg-6 ps-2">
-                    <label for="compain_price" class="form-label">Product Compain Price</label>
-                    <input type="text" name="compain_price" id="compain_price" class="form-control">
-                    @error('compain_price')
+                    <label for="compare_price" class="form-label">Product Compare Price</label>
+                    <input type="text" name="compare_price" id="compare_price" class="form-control">
+                    @error('compare_price')
                         <div class="invalid-feddback d-block">
                             {{ $message }}
                         </div>

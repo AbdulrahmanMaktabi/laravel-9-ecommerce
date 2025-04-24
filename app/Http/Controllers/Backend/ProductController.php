@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Facades\Loggy;
 use App\Facades\Media;
+use App\Http\Requests\Dashboard\Product\ProductStoreRequest;
 use Exception;
 use Illuminate\Support\Str;
 use App\Models\Category;
@@ -82,26 +83,38 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $request->validate([
-            'name'      => ['required'],
-            'parent_id' => ['nullable', 'exists:products,id'],
-            'image'     => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif'],
-            'status'    => ['required'],
-            'description' => ['required']
-        ]);
+        $request->validated();
 
-        $imageLocation = Media::uploadImage($request, 'image', 'uploads\products', 'products');
+        $imageLocation = Media::uploadImage($request, 'image', 'uploads/products', 'products');
 
-        Product::create([
-            'name'      => $request->input('name'),
-            'slug'      => Str::slug($request->name),
-            'image'     => $imageLocation,
-            'status'    => $request->input('status'),
-            'parent_id' => $request->input('parent_id'),
-            'description' => $request->input('description')
-        ]);
+        if (!$imageLocation) {
+            Loggy::error('can not upload Image');
+            return redirect()->route('products.index')->with('error', 'can not upload the image!');
+        }
+
+        try {
+            $product = Product::create([
+                'store_id' => Store::where('slug', $request->store)->value('id'),
+                'category_id' => Category::where('slug', $request->category)->value('id'),
+                'title' => $request->title,
+                'slug'  => Str::slug($request->title),
+                'small_description' => $request->small_description,
+                'description' => $request->description,
+                'price' => $request->price,
+                'compare_price' => $request->compare_price,
+                'status' => $request->status,
+                'meta_title' => $request->meta_title,
+                'meta_links' => $request->meta_links,
+                'meta_description' => $request->meta_description,
+                'image' => $imageLocation
+            ]);
+            Loggy::success("Product Created Successfully , " . $product);
+        } catch (Exception $e) {
+            Loggy::error($e->getMessage());
+            return redirect()->route('products.index')->with('error', $e->getMessage());
+        }
 
         return redirect()->route('products.index')->with('success', 'Product Created Successfully');
     }
