@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\Dashboard\StoreProducts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,6 +43,8 @@ class Product extends Model
         if ($filters['status'] ?? false) {
             $query->whereStatus($filters['status']);
         }
+
+        return $query;
     }
 
     /**
@@ -53,10 +56,28 @@ class Product extends Model
     }
 
     /**
+     * Local scope for list only active products
+     */
+    public function scopeActive($query)
+    {
+        $query->where('status', 'active');
+    }
+
+    /**
      * Route key name
      */
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new StoreProducts);
     }
 }

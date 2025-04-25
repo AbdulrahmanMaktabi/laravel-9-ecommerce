@@ -1,4 +1,3 @@
-@dd($category)
 <form action="{{ route('categories.' . $route, $category) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method($method)
