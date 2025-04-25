@@ -6,18 +6,18 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Edit {{ $category->name }}</li>
+                <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Product</li>
             </ol>
         </nav>
 
         <div class="card card-primary card-outline mb-4">
             <div class="card-header">
-                <div class="card-title">Edit {{ $category->name }}</div>
+                <div class="card-title">Create Product</div>
             </div>
 
-            <x-dashboard.category.category-form :category="$category" :categories="$categories" method="PUT" route="update"
-                button="Update" />
+            <x-dashboard.product.product-form :categories="$categories" :stores="$stores" button='Create' route='store'
+                method='POST' />
         </div>
 
     </div>

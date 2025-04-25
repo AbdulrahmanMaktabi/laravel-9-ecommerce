@@ -43,4 +43,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relation with sotres table
+     */
+    public function store()
+    {
+        return $this->hasMany(Store::class);
+    }
 }

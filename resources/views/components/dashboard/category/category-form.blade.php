@@ -1,3 +1,4 @@
+@dd($category)
 <form action="{{ route('categories.' . $route, $category) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method($method)
@@ -71,7 +72,7 @@
                 <option @selected($category->status == 'archived') value="archived">archived
                 </option>
             </select>
-            @error('parent_id')
+            @error('status')
                 <div class="invalid-feedback d-block">
                     {{ $message }}
                 </div>

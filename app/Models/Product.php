@@ -6,34 +6,37 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class Category extends Model
+class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "categories";
+    protected $table = 'products';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    // 🧭 Parent category
-    public function parent()
+    /**
+     * Realtion with stores table
+     */
+    public function store()
     {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    // 📂 Children categories
-    public function children()
-    {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->belongsTo(Store::class);
     }
 
     /**
-     * Local scope for filter by name || status
+     * Realtion with categories table
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Filter
      */
     public function scopeFilter($query, $filters)
     {
-        if ($filters['name'] ?? false) {
-            $query->where('name', 'LIKE', "%{$filters['name']}%");
+        if ($filters['title'] ?? false) {
+            $query->where('title', 'LIKE', "%{$filters['title']}%");
         }
 
         if ($filters['status'] ?? false) {
@@ -42,19 +45,11 @@ class Category extends Model
     }
 
     /**
-     * Local scope for list only trashed categories
+     * Only trashed scope
      */
     public function scopeTrashed($query)
     {
         $query->onlyTrashed();
-    }
-
-    /**
-     * Local scope for list only active categroires
-     */
-    public function scopeActive($query)
-    {
-        $query->where('status', 'active');
     }
 
     /**

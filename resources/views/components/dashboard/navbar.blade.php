@@ -15,7 +15,6 @@
                             <i @class([
                                 'nav-arrow bi bi-chevron-right' => isset($item['childrens']),
                             ])></i>
-                            <p>{{ isset($item['childrens']) }}</p>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -35,7 +34,6 @@
                 </li>
             @else
                 <li class="nav-item">
-                    {{-- @dump([$item['route'], Route::currentRouteName()]) --}}
                     <a href="{{ route($item['route']) }}" @class([
                         'nav-link',
                         'active' => Route::currentRouteNamed($item['route']),
