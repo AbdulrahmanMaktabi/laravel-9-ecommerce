@@ -27,6 +27,9 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    /**
+     * Local scope for filter by name || status
+     */
     public function scopeFilter($query, $filters)
     {
         if ($filters['name'] ?? false) {
@@ -38,11 +41,25 @@ class Category extends Model
         }
     }
 
+    /**
+     * Local scope for list only trashed categories
+     */
     public function scopeTrashed($query)
     {
         $query->onlyTrashed();
     }
 
+    /**
+     * Local scope for list only active categroires
+     */
+    public function scopeActive($query)
+    {
+        $query->where('status', 'active');
+    }
+
+    /**
+     * Route key name
+     */
     public function getRouteKeyName()
     {
         return 'slug';

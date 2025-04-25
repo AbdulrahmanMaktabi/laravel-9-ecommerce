@@ -5,16 +5,13 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Products</li>
+                <li class="breadcrumb-item active" aria-current="page">Trashed Products</li>
             </ol>
         </nav>
 
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title">Products List</h3>
-                <div class="card-tools">
-                    <a href="{{ route('products.create') }}" class="btn btn-success btn-sm">create</a>
-                </div>
+                <h3 class="card-title">Trashed Products List</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body p-0">
@@ -30,6 +27,7 @@
                             <option value="active" @selected(request('status') == 'active')>Active</option>
                             <option value="inactive" @selected(request('status') == 'inactive')>Inactive</option>
                             <option value="archived" @selected(request('status') == 'archived')>Archived</option>
+                            <option value="draft" @selected(request('status') == 'draft')>Draft</option>
                         </select>
                     </div>
 
@@ -59,7 +57,7 @@
                                 <td>{{ $product->price }}</td>
                                 <td>{{ $product->category?->name }}</td>
                                 <td>
-                                    @switch($product->category?->status)
+                                    @switch($product?->status)
                                         @case('active')
                                             <span class="badge text-bg-success">active</span>
                                         @break
@@ -72,6 +70,10 @@
                                             <span class="badge text-bg-warning">archived</span>
                                         @break
 
+                                        @case('draft')
+                                            <span class="badge text-bg-warning">draft</span>
+                                        @break
+
                                         @default
                                             <span class="badge text-bg-secondary">unknown</span>
                                     @endswitch
@@ -80,22 +82,20 @@
 
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('categories.edit', $product->category) }}"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('categories.destroy', $product->category) }}"
-                                            method="POST">
+
+                                        <form action="{{ route('products.forceDelete', $product) }}" method="POST">
                                             @csrf
                                             @method('delete')
-                                            <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
-                                                value="Delete" />
+                                            <input type="submit" class="btn btn-danger btn-sm"
+                                                style="border-top-right-radius:0;border-bottom-right-radius:0;"
+                                                value="Force" />
                                         </form>
-                                        <form action="{{ route('categories.updateStatusToArchived', $product->category) }}"
-                                            method="POST">
+                                        <form action="{{ route('products.restore', $product) }}" method="POST">
                                             @csrf
                                             @method('put')
-                                            <input type="submit" class="btn btn-warning btn-sm"
+                                            <input type="submit" class="btn btn-success btn-sm"
                                                 style="border-top-left-radius:0;border-bottom-left-radius:0;"
-                                                value="Archive" />
+                                                value="Restore" />
                                         </form>
                                     </div>
 
@@ -103,7 +103,7 @@
                             </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3"> No Product Found
+                                    <td colspan="3"> No Trashed Product Found
                                     </td>
                                 </tr>
                             @endforelse

@@ -78,7 +78,8 @@
             <div class="d-flex justify-content-around mb-3">
                 <div class="col-lg-6 pe-2">
                     <label for="price" class="form-label">Product Price</label>
-                    <input type="text" name="price" id="price" class="form-control">
+                    <input type="text" name="price" id="price" class="form-control"
+                        value="{{ old('price', $product->price) }}">
                     @error('price')
                         <div class="invalid-feddback d-block">
                             {{ $message }}
@@ -88,7 +89,8 @@
 
                 <div class="col-lg-6 ps-2">
                     <label for="compare_price" class="form-label">Product Compare Price</label>
-                    <input type="text" name="compare_price" id="compare_price" class="form-control">
+                    <input type="text" name="compare_price" id="compare_price" class="form-control"
+                        value="{{ old('compare_price', $product->compare_price) }}">
                     @error('compare_price')
                         <div class="invalid-feddback d-block">
                             {{ $message }}
@@ -103,12 +105,12 @@
             <label for="status" class="form-label">Status</label>
             <select name="status" id="status" class="form-select">
                 <option value="">-- No Status --</option>
-                <option @selected($product->status == 'active') value="active">active</option>
-                <option @selected($product->status == 'inactive') value="inactive">inactive
+                <option @selected(old('status', $product->status == 'active')) value="active">active</option>
+                <option @selected(old('status', $product->status == 'inactive')) value="inactive">inactive
                 </option>
-                <option @selected($product->status == 'archived') value="archived">archived
+                <option @selected(old('status', $product->status == 'archived')) value="archived">archived
                 </option>
-                <option @selected($product->status == 'draft') value="draft">draft
+                <option @selected(old('status', $product->status == 'draft')) value="draft">draft
                 </option>
             </select>
             @error('status')
@@ -121,7 +123,7 @@
         <!-- Featured -->
         <div class="mb-3">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="1" id="featured">
+                <input class="form-check-input" type="checkbox" @checked(old('featured', $product->featured)) id="featured">
                 <label class="form-check-label user-select-none" for="featured">
                     Featured
                 </label>
@@ -138,7 +140,8 @@
             <div class="d-flex justify-content-around mb-3">
                 <div class="col-lg-6 pe-2">
                     <label for="meta_title" class="form-label">Meta Title</label>
-                    <input type="text" name="meta_title" id="meta_title" class="form-control">
+                    <input type="text" name="meta_title" id="meta_title" class="form-control"
+                        value="{{ old('meta_title', $product->meta_title) }}">
                     @error('meta_title')
                         <div class="invalid-feddback d-block">
                             {{ $message }}
@@ -147,8 +150,9 @@
                 </div>
 
                 <div class="col-lg-6 ps-2">
-                    <label for="meta_links	" class="form-label">Meta Links</label>
-                    <input type="text" name="meta_links	" id="meta_links	" class="form-control">
+                    <label for="meta_links" class="form-label">Meta Links</label>
+                    <input type="text" name="meta_links" id="meta_links" class="form-control"
+                        value="{{ old('meta_links', $product->meta_links) }}">
                     @error('meta_links ')
                         <div class="invalid-feddback d-block">
                             {{ $message }}

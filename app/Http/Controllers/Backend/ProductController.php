@@ -62,10 +62,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::with(['children', 'parent'])
+        $categories = Category::Active()
+            ->with(['children', 'parent'])
             ->get();
 
-        $stores = Store::all();
+        $stores = Store::all()
+            ->except(['created_at', 'updated_at', 'deleted_at']);
 
         if (!$categories) {
             Loggy::error('Can`t load categories');
@@ -128,7 +130,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $categories = Category::with(['children', 'parent'])
+        $categories = Category::Active()
+            ->with(['children', 'parent'])
             ->get();
 
         $stores = Store::all();
@@ -179,57 +182,39 @@ class ProductController extends Controller
     /**
      * Restore trashed specified resource 
      */
-    public function restore($category)
+    public function restore($productSlug)
     {
         // Cat
-        if (!$category = Product::onlyTrashed()->where('slug', $category)->first()) {
+        if (!$product = Product::onlyTrashed()->where('slug', $productSlug)->first()) {
             Loggy::error('Product is not found');
             return redirect()->back()->with('error', 'The category is not found');
         }
 
         try {
-            $category->restore();
+            $product->restore();
             return redirect()->back()->with('success', 'The Product is restored');
         } catch (Exception $e) {
-            Loggy('Error With restoring Product: ' . $category . ' Message: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Error with restoring the category: ' . $category->name);
-        }
-    }
-
-    /**
-     * Force Delete specified resource from storage.
-     */
-    public function forceDelete($category)
-    {
-        if (!$category = Product::onlyTrashed()->where('slug', $category)->first()) {
-            Loggy::error('Product is not found');
-            return redirect()->back()->with('error', 'Product is not found');
-        }
-
-        try {
-            $category->forceDelete();
-
-            if ($category->image) {
-                Media::deleteImage($category->image);
-            }
-            Loggy::success('Product Force Deleted Successfully , ' . $category);
-            return redirect()->back()->with('success', 'Product is force deleted');
-        } catch (Exception $e) {
-            Loggy('Error with Force Deleting the category: ' . $category . ' Message: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Error with Force Deleting the category: ' . $category->name);
+            Loggy('Error With restoring Product: ' . $product . ' Message: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error with restoring the category: ' . $product->name);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Product $category
+     * @param  Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $category)
+    public function destroy(Product $product)
     {
         try {
-            $category->delete();
+            $product->delete();
+
+            if ($product->image) {
+                if (!Media::deleteImage($product->image)) {
+                    Loggy::error("Product: ", $product . " image can not be deleted");
+                }
+            }
         } catch (Exception $e) {
             Loggy::error('Product deletion failed:' . $e->getMessage());
             return redirect()->back()->with('error', 'Product deleted failed');
@@ -239,11 +224,37 @@ class ProductController extends Controller
     }
 
     /**
+     * Force Delete specified resource from storage.
+     */
+    public function forceDelete($productSlug)
+    {
+        if (!$product = Product::onlyTrashed()->where('slug', $productSlug)->first()) {
+            Loggy::error('Product is not found');
+            return redirect()->back()->with('error', 'Product is not found');
+        }
+
+        try {
+            $product->forceDelete();
+
+            if ($product->image) {
+                if (!Media::deleteImage($product->image)) {
+                    Loggy::error("Product: ", $product . " image can not be deleted");
+                }
+            }
+            Loggy::success('Product Force Deleted Successfully , ' . $product);
+            return redirect()->back()->with('success', 'Product is force deleted');
+        } catch (Exception $e) {
+            Loggy('Error with Force Deleting the product: ' . $product . ' Message: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error with Force Deleting the product: ' . $product->title);
+        }
+    }
+
+    /**
      * Update Status of category to archived
      */
-    public function updateStatusToArchived(Product $category)
+    public function updateStatusToArchived(Product $product)
     {
-        $category->update(['status' => 'archived']);
+        $product->update(['status' => 'archived']);
         return redirect()->route('products.index')->with('success', 'Product Status Updated Successfully');
     }
 }

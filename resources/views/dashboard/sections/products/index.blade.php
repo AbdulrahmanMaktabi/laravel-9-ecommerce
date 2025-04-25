@@ -59,7 +59,7 @@
                                 <td>{{ $product->price }}</td>
                                 <td>{{ $product->category?->name }}</td>
                                 <td>
-                                    @switch($product->category?->status)
+                                    @switch($product?->status)
                                         @case('active')
                                             <span class="badge text-bg-success">active</span>
                                         @break
@@ -72,6 +72,10 @@
                                             <span class="badge text-bg-warning">archived</span>
                                         @break
 
+                                        @case('draft')
+                                            <span class="badge text-bg-warning">draft</span>
+                                        @break
+
                                         @default
                                             <span class="badge text-bg-secondary">unknown</span>
                                     @endswitch
@@ -80,10 +84,9 @@
 
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('categories.edit', $product->category) }}"
+                                        <a href="{{ route('products.edit', $product) }}"
                                             class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('categories.destroy', $product->category) }}"
-                                            method="POST">
+                                        <form action="{{ route('products.destroy', $product) }}" method="POST">
                                             @csrf
                                             @method('delete')
                                             <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
