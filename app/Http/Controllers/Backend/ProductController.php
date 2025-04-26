@@ -66,8 +66,7 @@ class ProductController extends Controller
             ->with(['children', 'parent'])
             ->get();
 
-        $stores = Store::all()
-            ->except(['created_at', 'updated_at', 'deleted_at']);
+        $stores = Store::all();
 
         if (!$categories) {
             Loggy::error('Can`t load categories');

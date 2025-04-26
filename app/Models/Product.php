@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\Dashboard\StoreProducts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -53,14 +52,6 @@ class Product extends Model
     public function scopeTrashed($query)
     {
         $query->onlyTrashed();
-    }
-
-    /**
-     * Local scope for list only active products
-     */
-    public function scopeActive($query)
-    {
-        $query->where('status', 'active');
     }
 
     /**
