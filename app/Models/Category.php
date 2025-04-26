@@ -28,6 +28,14 @@ class Category extends Model
     }
 
     /**
+     * Relation with products
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
      * Local scope for filter by name || status
      */
     public function scopeFilter($query, $filters)
