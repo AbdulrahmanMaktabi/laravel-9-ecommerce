@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\Dashboard\storeProductsScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,6 +51,14 @@ class Product extends Model
     public function scopeTrashed($query)
     {
         $query->onlyTrashed();
+    }
+
+    /**
+     * Global scope
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('storeProducts', new storeProductsScope());
     }
 
     /**

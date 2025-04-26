@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
 
-class ProductScope implements Scope
+class storeProductsScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -18,8 +18,10 @@ class ProductScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if (Auth::check() && $user = Auth::user()) {
-            // $builder->where('')
+        if (Auth::check() && Auth::id() != 1) {
+            $builder->whereHas('store', function ($query) {
+                $query->where('user_id', Auth::id());
+            });
         }
     }
 }
