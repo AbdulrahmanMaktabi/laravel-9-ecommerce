@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\Backend\CategoryController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashbaordController;
 use App\Http\Controllers\Backend\ProductController;
-
+use App\Http\Controllers\Backend\ProfileController;
 
 Route::prefix('/dashboard')
     ->middleware(['auth', 'verified'])
@@ -25,4 +24,8 @@ Route::prefix('/dashboard')
         Route::delete('products/{category}/force-delete', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
         Route::resource('products', ProductController::class)->except('show');
         Route::put('product/update/status/to/archived/{category}', [ProductController::class, 'updateStatusToArchived'])->name('products.updateStatusToArchived');
+
+        // Profile Routes
+        Route::get('profile/{user}', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     });

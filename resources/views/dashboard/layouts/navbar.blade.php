@@ -10,8 +10,10 @@
                  </a>
              </li>
              <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
+             <li class="nav-item d-none d-md-block"><a href="{{ route('profile.edit', Auth::user()) }}"
+                     class="text-primrary nav-link">Profile</a></li>
              <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
-             <form action="logout" method="POST">
+             <form action="{{ route('logout') }}" method="POST">
                  @csrf
                  <li class="nav-item d-none d-md-block">
                      <input type="submit" value="Logout" class="text-danger nav-link">
@@ -174,7 +176,11 @@
                      <!--begin::Menu Footer-->
                      <li class="user-footer">
                          <a href="#" class="btn btn-default btn-flat">Profile</a>
-                         <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                         <form action="{{ route('logout') }}" method="POST">
+                             @csrf
+                             @method('post')
+                             <input type="submit" value="Logout" class="text-danger nav-link">
+                         </form>
                      </li>
                      <!--end::Menu Footer-->
                  </ul>
