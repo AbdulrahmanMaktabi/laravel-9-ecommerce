@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Models\Store;
+use App\Models\Tag;
 
 class ProductController extends Controller
 {
@@ -68,6 +69,7 @@ class ProductController extends Controller
 
         $stores = Store::all();
 
+
         if (!$categories) {
             Loggy::error('Can`t load categories');
         }
@@ -88,6 +90,20 @@ class ProductController extends Controller
     public function store(ProductStoreRequest $request)
     {
         $request->validated();
+        $tags = explode(',', $request->input('tags'));
+        $tags_ids = [];
+        foreach ($tags as $tagName) {
+            if (strlen($tagName) == 0) continue;
+
+            $tag = Tag::updateOrCreate(
+                ['slug' => Str::slug($tagName)],
+                [
+                    'name'      => $tagName,
+                    'slug'      => Str::slug($tagName)
+                ]
+            );
+            $tags_ids[] = $tag->id;
+        }
 
         $imageLocation = Media::uploadImage($request, 'image', 'uploads/products', 'products');
 
@@ -112,6 +128,8 @@ class ProductController extends Controller
                 'meta_description' => $request->meta_description,
                 'image' => $imageLocation
             ]);
+            // The sync() method in Laravel is used to synchronize many-to-many relationships
+            $product->tags()->sync($tags_ids);
             Loggy::success("Product Created Successfully , " . $product);
         } catch (Exception $e) {
             Loggy::error($e->getMessage());
@@ -135,12 +153,18 @@ class ProductController extends Controller
 
         $stores = Store::all();
 
+        $tags = $product->tags()->pluck('name')->toArray();
+
         if (!$categories) {
-            Loggy::error('Can`t load categories');
+            Loggy::error('Can`t load categories for ' . $product);
         }
 
         if (!$stores) {
-            Loggy::error('Can`t load stores');
+            Loggy::error('Can`t load stores for ' . $product);
+        }
+
+        if (!$tags) {
+            Loggy::error('Can`t load tags for ' . $product);
         }
 
         return view('dashboard.sections.products.edit', get_defined_vars());
@@ -157,6 +181,21 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
+        $tags = explode(',', $request->input('tags'));
+        $tags_ids = [];
+        foreach ($tags as $tagName) {
+            if (strlen($tagName) == 0) continue;
+
+            $tag = Tag::updateOrCreate(
+                ['slug' => Str::slug($tagName)],
+                [
+                    'name'      => $tagName,
+                    'slug'      => Str::slug($tagName)
+                ]
+            );
+            $tags_ids[] = $tag->id;
+        }
+
         if ($request->has('image')) {
             $imageLocation = Media::updateImage($request, 'image', $product->image, 'uploads/products', 'products');
             $product->update(['image' => $imageLocation]);
@@ -170,6 +209,7 @@ class ProductController extends Controller
 
         try {
             $product->update($data);
+            $product->tags()->sync($tags_ids);
         } catch (Exception $e) {
             Loggy::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());

@@ -27,6 +27,7 @@ class ProductStoreRequest extends FormRequest
         return [
             "store"             => ['required', 'exists:stores,slug'],
             "title"             => ['required', 'unique:products,title'],
+            'tags'              => ['nullable'],
             "category"          => ['required', 'exists:categories,slug', new ActiveCategory($this->category)],
             "small_description" => ['required'],
             "description"       => ['required'],

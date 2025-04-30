@@ -32,6 +32,21 @@ class Product extends Model
     }
 
     /**
+     * Realtion with tags
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(
+            Tag::class, // Related Model
+            'product_tag',
+            'product_id',
+            'tag_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
      * Filter
      */
     public function scopeFilter($query, $filters)
