@@ -36,5 +36,8 @@
 
     {{-- notyf --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    {{-- tom select --}}
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+
 </head>
 <!--end::Head-->
