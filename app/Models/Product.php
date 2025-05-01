@@ -32,6 +32,14 @@ class Product extends Model
     }
 
     /**
+     * Realtion with media table
+     */
+    public function media()
+    {
+        return $this->belongsTo(Media::class);
+    }
+
+    /**
      * Filter
      */
     public function scopeFilter($query, $filters)
