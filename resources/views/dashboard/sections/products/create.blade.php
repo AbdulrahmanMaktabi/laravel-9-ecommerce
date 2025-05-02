@@ -15,7 +15,6 @@
             <div class="card-header">
                 <div class="card-title">Create Product</div>
             </div>
-            {{-- @dd($tags) --}}
             <x-dashboard.product.product-form :categories="$categories" :stores="$stores" button='Create' route='store'
                 method='POST' />
         </div>

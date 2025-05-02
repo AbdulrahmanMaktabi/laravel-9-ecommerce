@@ -20,11 +20,11 @@ class ProductForm extends Component
     public $route;
     public $button;
 
-    public function __construct(Product $product = null, $categories, $tags = null, $stores, $method, $route, $button)
+    public function __construct($categories, $stores, $method, $route, $button, Product $product = null, $tags = null)
     {
         $this->product = $product ?? new Product();
         $this->categories = $categories;
-        $this->tags = $tags ?? null;
+        $this->tags = $tags;
         $this->stores = $stores;
         $this->method = $method;
         $this->route = $route;

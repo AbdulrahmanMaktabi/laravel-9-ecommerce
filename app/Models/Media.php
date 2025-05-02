@@ -15,7 +15,7 @@ class Media extends Model
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * Relation with media (images)
+     * Relation with product (images)
      */
     public function product()
     {
@@ -23,8 +23,8 @@ class Media extends Model
             Product::class,
             'product_image',
             'image_id',
-            'id',
             'product_id',
+            'id',
             'id'
         );
     }

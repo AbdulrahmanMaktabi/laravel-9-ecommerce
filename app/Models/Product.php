@@ -32,11 +32,18 @@ class Product extends Model
     }
 
     /**
-     * Relation with media table
+     * Relation with media 
      */
     public function media()
     {
-        return $this->belongsTo(Media::class);
+        return $this->belongsToMany(
+            Media::class,
+            'product_image',
+            'product_id',
+            'image_id',
+            'id',
+            'id'
+        );
     }
 
     /**

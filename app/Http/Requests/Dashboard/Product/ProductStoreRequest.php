@@ -38,6 +38,8 @@ class ProductStoreRequest extends FormRequest
             "meta_links"        => ['nullable'],
             "meta_description"  => ['nullable'],
             "image"             => ['required', 'image', 'mimes:png,jpg,jpeg'],
+            "images"            => ['nullable', 'array'],
+            "images,*"          => ['file', 'mimes:png,jpg,jepg'],
         ];
     }
 }

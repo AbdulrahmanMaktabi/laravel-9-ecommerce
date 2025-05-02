@@ -12,6 +12,7 @@ use App\Http\Requests\Dashboard\Product\ProductUpdateRequest;
 use Exception;
 use Illuminate\Support\Str;
 use App\Models\Category;
+use App\Models\Media as ModelMedia;
 use App\Models\Store;
 use App\Models\Tag;
 
@@ -69,7 +70,6 @@ class ProductController extends Controller
 
         $stores = Store::all();
 
-
         if (!$categories) {
             Loggy::error('Can`t load categories');
         }
@@ -112,6 +112,21 @@ class ProductController extends Controller
             return redirect()->route('products.index')->with('error', 'can not upload the image!');
         }
 
+        if ($request->has('images')) {
+            $locations = Media::uploadMultiImages($request, 'images');
+
+            if (!$locations) {
+                Loggy::error('Error while uploading product images');
+                return redirect()->back()->with('error', 'Error while uploading product images');
+            }
+
+            $images_ids = [];
+            foreach ($locations as $location) {
+                $media = ModelMedia::create(['location' => $location]);
+                $images_ids[] = $media->id;
+            }
+        }
+
         try {
             $product = Product::create([
                 'store_id' => Store::where('slug', $request->store)->value('id'),
@@ -128,8 +143,12 @@ class ProductController extends Controller
                 'meta_description' => $request->meta_description,
                 'image' => $imageLocation
             ]);
+
             // The sync() method in Laravel is used to synchronize many-to-many relationships
             $product->tags()->sync($tags_ids);
+            // attach() adds new records to the pivot table without removing existing ones
+            $product->media()->attach($images_ids);
+
             Loggy::success("Product Created Successfully , " . $product);
         } catch (Exception $e) {
             Loggy::error($e->getMessage());
@@ -201,6 +220,21 @@ class ProductController extends Controller
             $product->update(['image' => $imageLocation]);
         }
 
+        if ($request->has('images')) {
+            $locations = Media::uploadMultiImages($request, 'images');
+
+            if (!$locations) {
+                Loggy::error('Error while uploading product images');
+                return redirect()->back()->with('error', 'Error while uploading product images');
+            }
+
+            $images_ids = [];
+            foreach ($locations as $location) {
+                $media = ModelMedia::create(['location' => $location]);
+                $images_ids[] = $media->id;
+            }
+        }
+
         unset($data['store']);
         unset($data['category']);
 
@@ -210,6 +244,7 @@ class ProductController extends Controller
         try {
             $product->update($data);
             $product->tags()->sync($tags_ids);
+            $product->media()->attach($images_ids);
         } catch (Exception $e) {
             Loggy::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());

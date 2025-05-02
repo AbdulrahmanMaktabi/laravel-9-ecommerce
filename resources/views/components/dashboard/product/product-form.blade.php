@@ -37,7 +37,7 @@
             <div class="col-md-6 ps-2">
                 <label for="tags" class="form-label">Product Tags</label>
                 <input id="tags" autocomplete="off" placeholder="Add tags ..." name="tags"
-                    value="{{ implode(',', $tags) }}">
+                    value="{{ isset($tags) ? implode(',', $tags) : '' }}">
                 @error('tags')
                     <div class="invalid-feedback d-block">
                         {{ $message }}
@@ -64,6 +64,18 @@
                 </div>
             @enderror
         </div>
+
+        <!-- Images -->
+        <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">Upload Multiple Files</label>
+            <input class="form-control" type="file" id="formFileMultiple" name="images[]" multiple>
+            @error('images')
+                <div class="invalid-feedback d-block">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
 
         <!-- Small Description -->
         <div class="mb-3">
