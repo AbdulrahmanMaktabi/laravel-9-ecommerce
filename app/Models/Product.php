@@ -16,7 +16,7 @@ class Product extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
-     * Realtion with stores table
+     * Relation with stores table
      */
     public function store()
     {
@@ -24,7 +24,7 @@ class Product extends Model
     }
 
     /**
-     * Realtion with categories table
+     * Relation with categories table
      */
     public function category()
     {
@@ -32,12 +32,20 @@ class Product extends Model
     }
 
     /**
-     * Realtion with tags
+     * Relation with media table
+     */
+    public function media()
+    {
+        return $this->belongsTo(Media::class);
+    }
+
+    /**
+     * Relation with tags
      */
     public function tags()
     {
         return $this->belongsToMany(
-            Tag::class, // Related Model
+            Tag::class,
             'product_tag',
             'product_id',
             'tag_id',
@@ -80,8 +88,6 @@ class Product extends Model
 
     /**
      * The "booted" method of the model.
-     *
-     * @return void
      */
     protected static function booted()
     {
