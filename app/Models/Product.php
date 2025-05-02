@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Scopes\Dashboard\storeProductsScope;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -86,11 +87,11 @@ class Product extends Model
     }
 
     /**
-     * Route key name
+     * Only active scope
      */
-    public function getRouteKeyName()
+    public function scopeActive($query)
     {
-        return 'slug';
+        $query->where('status', 'active');
     }
 
     /**
@@ -99,5 +100,36 @@ class Product extends Model
     protected static function booted()
     {
         static::addGlobalScope(new storeProductsScope());
+    }
+
+    /**
+     * Image accessor
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image)
+            return "https://tinasbotanicals.com/wp-content/uploads/2025/01/No-Product-Image-Available.png";
+        if (Str::startsWith($this->image, ['https://', 'http://']))
+            return $this->image;
+
+        return asset($this->image);
+    }
+
+    /**
+     * Discount accessor
+     */
+    public function getDiscountAttribute()
+    {
+        if ($this->compare_price)
+            return round(100 - (100 * ($this->price / $this->compare_price)));
+        return 0;
+    }
+
+    /**
+     * Route key name
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

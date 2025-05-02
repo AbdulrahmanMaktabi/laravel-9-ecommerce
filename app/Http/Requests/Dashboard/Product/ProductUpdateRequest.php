@@ -44,7 +44,7 @@ class ProductUpdateRequest extends FormRequest
             "price"             => ['required', 'numeric'],
             "compare_price"     => ['nullable', 'numeric'],
             "status"            => ['required', 'in:active,inactive,arshived,draft'],
-            "featured"          => ['nullable', 'boolean'],
+            "featured"          => ['nullable', 'in:on,off'],
             "meta_title"        => ['nullable'],
             "meta_links"        => ['nullable'],
             "meta_description"  => ['nullable'],

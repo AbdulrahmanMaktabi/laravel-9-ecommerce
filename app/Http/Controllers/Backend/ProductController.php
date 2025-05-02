@@ -128,20 +128,24 @@ class ProductController extends Controller
         }
 
         try {
+            $featured = $request->input('featured') == 'on' ?  1 : 0;
+
             $product = Product::create([
-                'store_id' => Store::where('slug', $request->store)->value('id'),
-                'category_id' => Category::where('slug', $request->category)->value('id'),
-                'title' => $request->title,
-                'slug'  => Str::slug($request->title),
+                'store_id'          => Store::where('slug', $request->store)->value('id'),
+                'category_id'       => Category::where('slug', $request->category)->value('id'),
+                'title'             => $request->title,
+                'slug'              => Str::slug($request->title),
                 'small_description' => $request->small_description,
-                'description' => $request->description,
-                'price' => $request->price,
-                'compare_price' => $request->compare_price,
-                'status' => $request->status,
-                'meta_title' => $request->meta_title,
-                'meta_links' => $request->meta_links,
-                'meta_description' => $request->meta_description,
-                'image' => $imageLocation
+                'description'       => $request->description,
+                'price'             => $request->price,
+                'compare_price'     => $request->compare_price,
+                'status'            => $request->status,
+                'meta_title'        => $request->meta_title,
+                'meta_links'        => $request->meta_links,
+                'meta_description'  => $request->meta_description,
+                'image'             => $imageLocation,
+                'featured'          => $featured
+
             ]);
 
             // The sync() method in Laravel is used to synchronize many-to-many relationships
@@ -237,6 +241,7 @@ class ProductController extends Controller
 
         unset($data['store']);
         unset($data['category']);
+        $data['featured'] == 'on' ? ($data['featured'] = 1) : ($data['featured'] = 0);
 
         $data['store_id'] = Store::where('slug', $request->store)->value('id');
         $data['category_id'] = Category::where('slug', $request->category)->value('id');
@@ -244,7 +249,8 @@ class ProductController extends Controller
         try {
             $product->update($data);
             $product->tags()->sync($tags_ids);
-            $product->media()->attach($images_ids);
+            if (isset($images_ids))
+                $product->media()->attach($images_ids);
         } catch (Exception $e) {
             Loggy::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
