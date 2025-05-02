@@ -7,7 +7,7 @@ use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProfileController;
 
 Route::prefix('/dashboard')
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'auth.type:admin,super-admin', 'verified'])
     ->group(function () {
         Route::get('/', [DashbaordController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
