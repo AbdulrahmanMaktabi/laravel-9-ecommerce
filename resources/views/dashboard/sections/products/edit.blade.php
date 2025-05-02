@@ -16,8 +16,8 @@
                 <div class="card-title">Edit {{ $product->title }}</div>
             </div>
 
-            <x-dashboard.product.product-form :product="$product" :categories="$categories" :stores="$stores" method="PUT"
-                route="update" button="Update" />
+            <x-dashboard.product.product-form :product="$product" :tags="$tags" :categories="$categories" :stores="$stores"
+                method="PUT" route="update" button="Update" />
         </div>
 
     </div>

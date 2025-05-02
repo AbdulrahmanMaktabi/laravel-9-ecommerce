@@ -7,7 +7,9 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,16 +22,19 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+
 
         // Category::factory(50)->create();
         // Store::factory(10)->create();
-        Product::factory(500)->create();
+        // Product::factory(500)->create();
 
 
         // $this->run(UserSeeder::class);
+
+        // User::create([
+        //     'name'          => 'root',
+        //     'email'         => 'root@mail.com',
+        //     'password'      => Hash::make('secret'),
+        // ]);
     }
 }

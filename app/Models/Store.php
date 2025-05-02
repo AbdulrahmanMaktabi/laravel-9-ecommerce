@@ -20,4 +20,12 @@ class Store extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Local scope for list only active stores
+     */
+    public function scopeActive($query)
+    {
+        $query->where('status', 'active');
+    }
 }

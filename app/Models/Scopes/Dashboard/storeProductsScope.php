@@ -18,7 +18,7 @@ class storeProductsScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if (Auth::check() && Auth::id() != 1) {
+        if (Auth::check() && Auth::id() != 1002) {
             $builder->whereHas('store', function ($query) {
                 $query->where('user_id', Auth::id());
             });

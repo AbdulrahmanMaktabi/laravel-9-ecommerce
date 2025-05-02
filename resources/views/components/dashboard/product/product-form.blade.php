@@ -16,20 +16,35 @@
         </div>
 
         <!-- Product Category -->
-        <div class="mb-3">
-            <label for="category" class="form-label">Product Category</label>
-            <select name="category" id="category" class="form-select">
-                <option value="">-- No Category --</option>
-                @foreach ($categories as $cat)
-                    <option value="{{ $cat->slug }}" @selected($product->category?->id == $cat->id)>{{ $cat->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('category')
-                <div class="invalid-feedback d-block">
-                    {{ $message }}
-                </div>
-            @enderror
+        <div class="d-flex justify-items-around mb-3">
+            <div class="col-md-6 pe-2">
+                <label for="category" class="form-label">Product Category</label>
+                <select name="category" id="category" class="form-select">
+                    <option value="">-- No Category --</option>
+                    @forelse ($categories as $cat)
+                        <option value="{{ $cat->slug }}" @selected($product->category?->id == $cat->id)>{{ $cat->name }}
+                        </option>
+                    @empty
+                        <option value="">-- No Category Found --</option>
+                    @endforelse
+                </select>
+                @error('category')
+                    <div class="invalid-feedback d-block">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="col-md-6 ps-2">
+                <label for="tags" class="form-label">Product Tags</label>
+                <input id="tags" autocomplete="off" placeholder="Add tags ..." name="tags"
+                    value="{{ implode(',', $tags) }}">
+                @error('tags')
+                    <div class="invalid-feedback d-block">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
         </div>
 
         <!-- Image -->
@@ -123,7 +138,8 @@
         <!-- Featured -->
         <div class="mb-3">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" @checked(old('featured', $product->featured)) id="featured">
+                <input class="form-check-input" type="checkbox" name="featured" @checked(old('featured', $product->featured))
+                    id="featured">
                 <label class="form-check-label user-select-none" for="featured">
                     Featured
                 </label>
@@ -177,3 +193,20 @@
             <button type="submit" class="btn btn-primary">{{ $button }}</button>
         </div>
 </form>
+
+@push('scripts')
+    <script>
+        new TomSelect("#tags", {
+            items: {!! json_encode($tags) !!},
+            persist: false,
+            createOnBlur: true,
+            create: true,
+            plugins: ['remove_button'],
+            createFilter: function(input) {
+                input = input.toLowerCase();
+                return !(input in this.options);
+            }
+
+        });
+    </script>
+@endpush
