@@ -225,12 +225,11 @@
             <div class="row flash_sell_slider">
 
                 @forelse ($products as $product)
-                    {{-- @dd($product) --}}
                     <div class="col-xl-3 col-sm-6 col-lg-4">
                         <div class="wsus__product_item">
                             <span class="wsus__new">New</span>
                             <span class="wsus__minus">{{ $product->discount }}%</span>
-                            <a class="wsus__pro_link" href="product_details.html">
+                            <a class="wsus__pro_link" href="{{ route('product.show', $product) }}">
                                 <img src="{{ $product->image_url }}" alt="product" class="img-fluid w-100 img_1" />
                                 <img src="{{ $product->image_url }}" alt="product" class="img-fluid w-100 img_2" />
                             </a>
@@ -252,8 +251,14 @@
                                 </p>
                                 <a class="wsus__pro_name" href="#">{{ $product->title }}</a>
                                 <p class="wsus__price">${{ $product->compare_price }}
-                                    <del>${{ $product->price }}</del></p>
-                                <a class="add_cart" href="#">add to cart</a>
+                                    <del>${{ $product->price }}</del>
+                                </p>
+                                <form action="{{ route('cart.store', $product->id) }}" method="post">
+                                    @csrf
+                                    <input type="hidden" value="{{ $product->id }}" name="product_id">
+                                    <input type="hidden" value="1" name="qty">
+                                    <input class="add_cart" type="submit" value="add to cart">
+                                </form>
                             </div>
                         </div>
                     </div>
