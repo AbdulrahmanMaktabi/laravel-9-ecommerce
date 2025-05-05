@@ -20,12 +20,21 @@ class CartModelRepository implements CartRepository
 
     public function add(Product $product, $qty = 1)
     {
-        return Cart::create([
-            'user_id'           => Auth()->id(),
-            'cookie_id'         => $this->getCookieId(),
-            'qty'               => $qty,
-            'product_id'        => $product->id
+        $cartItem = Cart::firstOrNew([
+            'product_id' => $product->id,
+            'cookie_id' => $this->getCookieId()
         ]);
+
+        if ($cartItem->exists) {
+            $cartItem->increment('qty', $qty);
+        } else {
+            $cartItem->fill([
+                'user_id' => Auth::id(),
+                'qty' => $qty + 1
+            ])->save();
+        }
+
+        return $cartItem;
     }
 
     public function update(Product $product, $qty)
@@ -37,9 +46,9 @@ class CartModelRepository implements CartRepository
             ]);
     }
 
-    public function total()
+    public function total(): float
     {
-        return Cart::where('cookie_id', '')
+        return (float) Cart::where('cookie_id', $this->getCookieId())
             ->join('products', 'products.id', '=', 'carts.product_id')
             ->selectRaw('SUM(products.price * carts.qty) AS total')
             ->value('total');
@@ -55,15 +64,18 @@ class CartModelRepository implements CartRepository
     public function empty()
     {
         Cart::where('cookie_id', $this->getCookieId())
-            ->destroy();
+            ->delete();
     }
 
-    public function getCookieId()
+    protected function getCookieId()
     {
         $cookieId = Cookie::get('cookie_id');
 
         if (!$cookieId) {
-            $cookieId = Cookie::queue('cookie_id', Str::uuid(), Carbon::now()->addDays(30));
+            // Queue the cookie for 30 days
+            $cookieId = Str::uuid();
+
+            Cookie::queue('cookie_id', $cookieId, 60 * 24 * 30);
         }
 
         return $cookieId;

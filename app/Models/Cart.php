@@ -11,7 +11,17 @@ class Cart extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guraded = ['creatd_at', 'updated_at', 'id'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'cookie_id',
+        'qty',
+        'product_id'
+    ];
 
     public $incrementing = false;
 
@@ -36,8 +46,8 @@ class Cart extends Model
      */
     public static function booted()
     {
-        static::creating(function (Product $product) {
-            $product->id = Str::uuid();
+        static::creating(function (Cart $cart) {
+            $cart->id = Str::uuid();
         });
     }
 }

@@ -4,7 +4,11 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashbaordController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\Productcontroller;
+use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +22,8 @@ use App\Http\Controllers\Frontend\HomeController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::resource('cart', CartController::class);
+Route::resource('product', Productcontroller::class);
 
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/auth.php';
