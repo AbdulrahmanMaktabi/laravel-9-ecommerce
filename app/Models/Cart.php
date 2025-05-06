@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 class Cart extends Model
@@ -48,6 +49,25 @@ class Cart extends Model
     {
         static::creating(function (Cart $cart) {
             $cart->id = Str::uuid();
+            $cart->cookie_id = $this->getCookieId();
         });
+
+        static::addGlobalScope('cookieId', function ($query) {
+            $query->where('cookie_Id', Cart::getCookieId());
+        });
+    }
+
+    protected static function getCookieId()
+    {
+        $cookieId = Cookie::get('cookie_id');
+
+        if (!$cookieId) {
+            // Queue the cookie for 30 days
+            $cookieId = Str::uuid();
+
+            Cookie::queue('cookie_id', $cookieId, 60 * 24 * 30);
+        }
+
+        return $cookieId;
     }
 }

@@ -14,24 +14,21 @@ class CartModelRepository implements CartRepository
 {
     public function get(): Collection
     {
-        return Cart::where('cookie_id', $this->getCookieId())
+        return Cart::where('cookie_id', Cart::getCookieId())
             ->get();
     }
 
     public function add(Product $product, $qty = 1)
     {
-        $cartItem = Cart::firstOrNew([
-            'product_id' => $product->id,
-            'cookie_id' => $this->getCookieId()
-        ]);
+        $cartItem = Cart::where('product_id', $product->id)->first();
 
         if ($cartItem->exists) {
             $cartItem->increment('qty', $qty);
         } else {
-            $cartItem->fill([
+            Cart::creat([
                 'user_id' => Auth::id(),
-                'qty' => $qty + 1
-            ])->save();
+                'qty' => $qty
+            ]);
         }
 
         return $cartItem;
@@ -39,8 +36,7 @@ class CartModelRepository implements CartRepository
 
     public function update(Product $product, $qty)
     {
-        return Cart::where('cookie_Id', $this->getCookieId())
-            ->where('product_id', $product->id)
+        return Cart::where('product_id', $product->id)
             ->update([
                 'qty'           => $qty
             ]);
@@ -48,36 +44,20 @@ class CartModelRepository implements CartRepository
 
     public function total(): float
     {
-        return (float) Cart::where('cookie_id', $this->getCookieId())
-            ->join('products', 'products.id', '=', 'carts.product_id')
+        return (float) Cart::join('products', 'products.id', '=', 'carts.product_id')
             ->selectRaw('SUM(products.price * carts.qty) AS total')
             ->value('total');
     }
 
     public function delete(Product $product)
     {
-        Cart::where('cookie_id', $this->getCookieId())
-            ->where('product_Id', $product->id)
+        Cart::where('product_Id', $product->id)
             ->delete();
     }
 
     public function empty()
     {
-        Cart::where('cookie_id', $this->getCookieId())
+        Cart::query()
             ->delete();
-    }
-
-    protected function getCookieId()
-    {
-        $cookieId = Cookie::get('cookie_id');
-
-        if (!$cookieId) {
-            // Queue the cookie for 30 days
-            $cookieId = Str::uuid();
-
-            Cookie::queue('cookie_id', $cookieId, 60 * 24 * 30);
-        }
-
-        return $cookieId;
     }
 }

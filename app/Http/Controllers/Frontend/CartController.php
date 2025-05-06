@@ -42,9 +42,11 @@ class CartController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        dd($request->all());
         $request->validate([
             'qty' => 'required|integer|min:1'
         ]);
+
 
         $this->cart->update($product, $request->qty);
 

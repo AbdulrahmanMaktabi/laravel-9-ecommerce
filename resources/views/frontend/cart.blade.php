@@ -52,10 +52,20 @@
                                             </td>
 
                                             <td class="wsus__pro_select">
-                                                <form action="{{ route('cart.update', $item->product) }}" method="post"
-                                                    class="select_number">
+                                                <form action="#" method="post" class="select_number">
                                                     @method('put')
                                                     @csrf
+                                                    @if ($errors->any())
+                                                        <div class="alert alert-danger">
+                                                            <ul>
+                                                                @foreach ($errors->all() as $error)
+                                                                    <li>{{ $error }}</li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    @endif
+                                                    <input type="hidden" name="product_id"
+                                                        value="{{ $item->product->id }}">
                                                     <input class="number_area" type="text" min="1"
                                                         max="100" value="{{ $item->qty }}" name="qty" />
                                                     <input type="submit" value="update">
