@@ -1,6 +1,5 @@
 <?php
 
-use App\Facades\Cart;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;

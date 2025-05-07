@@ -43,9 +43,22 @@ class CartModelRepository implements CartRepository
         if (!$this->items->count()) {
             // Fetch cart items from the database with related product data
             $this->items = Cart::with(['product'])
-                ->where('cookie_id', Cart::getCookieId())
                 ->get();
         }
+
+        /**
+         *  select
+         *  *
+         *  from
+         *  `carts`
+         *  where
+         *  `cookie_id` = '4b6053ff-627a-4b0f-a535-4acfba70752e'
+         *  and `carts`.`deleted_at` is null
+         *  and `cookie_Id` = '4b6053ff-627a-4b0f-a535-4acfba70752e'
+         * 
+         * -> ->where('cookie_id', Cart::getCookieId()) x2
+         */
+
 
         // Return the items collection
         return $this->items;
