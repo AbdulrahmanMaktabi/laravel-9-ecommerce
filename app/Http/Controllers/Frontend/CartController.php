@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\Product;
+use App\Models\Cart;
 use App\Repositories\Cart\CartRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -40,15 +41,13 @@ class CartController extends Controller
             ->with('success', 'Product added to cart successfully');
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Cart $cart)
     {
-        dd($request->all());
         $request->validate([
             'qty' => 'required|integer|min:1'
         ]);
 
-
-        $this->cart->update($product, $request->qty);
+        $this->cart->update($cart->id, $request->qty);
 
         return redirect()->route('cart.index')
             ->with('success', 'Cart updated successfully');

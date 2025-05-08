@@ -49,7 +49,7 @@ class Cart extends Model
     {
         static::creating(function (Cart $cart) {
             $cart->id = Str::uuid();
-            $cart->cookie_id = $this->getCookieId();
+            $cart->cookie_id = self::getCookieId();
         });
 
         static::addGlobalScope('cookieId', function ($query) {

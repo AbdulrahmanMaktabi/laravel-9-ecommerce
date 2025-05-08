@@ -68,11 +68,12 @@ class CartModelRepository implements CartRepository
     {
         $cartItem = Cart::where('product_id', $product->id)->first();
 
-        if ($cartItem->exists) {
-            $cartItem->increment('qty', $qty);
+        if ($cartItem) {
+            $cartItem = Cart::where('product_id', $product->id)->first()->increment('qty', $qty);
         } else {
-            $cart = Cart::creat([
+            $cart = Cart::create([
                 'user_id' => Auth::id(),
+                'product_id'    => $product->id,
                 'qty' => $qty
             ]);
             $this->get()->push($cart);
