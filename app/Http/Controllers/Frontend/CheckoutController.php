@@ -15,7 +15,7 @@ class CheckoutController extends Controller
 {
     public function create(CartRepository $cart)
     {
-        return view('frontend.checkout');
+        return view('frontend.checkout', get_defined_vars());
     }
 
     public function store(Request $request, CartRepository $cart)
@@ -23,29 +23,33 @@ class CheckoutController extends Controller
         DB::beginTransaction();
 
         try {
-            // Create the order
-            $order = Order::create([
-                'store_id'       => 1, // Assuming single store for now
-                'user_id'        => $request->user()?->id,
-                'payment_method' => 'card',
-            ]);
-
-            // Loop through cart items and save each as an order item
-            foreach ($cart->get() as $item) {
-                OrderItem::create([
-                    'order_id'       => $order->id,
-                    'product_id'     => $item->product?->id,
-                    'product_name'   => $item->product?->title,
-                    'product_price'  => $item->product?->price,
-                    'qty'            => $item->qty,
+            $cartItems = $cart->get()->groupBy('product.store_id')->all();
+            foreach ($cartItems as $store => $item) {
+                // Create the order
+                $order = Order::create([
+                    'store_id'       => $store,
+                    'user_id'        => $request->user()?->id,
+                    'payment_method' => 'card',
                 ]);
+
+                // Loop through cart items and save each as an order item
+                foreach ($cart->get() as $item) {
+                    OrderItem::create([
+                        'order_id'       => $order->id,
+                        'product_id'     => $item->product?->id,
+                        'product_name'   => $item->product?->title,
+                        'product_price'  => $item->product?->price,
+                        'qty'            => $item->qty,
+                    ]);
+                }
+
+                // Store billing/shipping addresses
+                foreach ($request->post("address") as $type => $address) {
+                    $address['type'] = $type; // Add address type (e.g., billing or shipping)
+                    $order->addresses()->create($address);
+                }
             }
 
-            // Store billing/shipping addresses
-            foreach ($request->post("address") as $type => $address) {
-                $address['type'] = $type; // Add address type (e.g., billing or shipping)
-                $order->addresses()->create($address);
-            }
 
             DB::commit(); // All good — save changes
             Loggy::success("Order creatd successfully");

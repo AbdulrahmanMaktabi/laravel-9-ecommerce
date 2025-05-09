@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\DashbaordController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\Productcontroller;
+use App\Http\Controllers\Frontend\CheckoutController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,5 +26,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::resource('cart', CartController::class);
 Route::resource('product', Productcontroller::class);
 
+Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/auth.php';
