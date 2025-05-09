@@ -9,5 +9,7 @@ class OrderAddress extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $guarded = ["created_at", "update_at", "id"];
 }

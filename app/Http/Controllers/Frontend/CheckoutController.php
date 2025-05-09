@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Facades\Loggy;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Frontend\CheckoutStoreRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Repositories\Cart\CartRepository;
@@ -18,8 +19,10 @@ class CheckoutController extends Controller
         return view('frontend.checkout', get_defined_vars());
     }
 
-    public function store(Request $request, CartRepository $cart)
+    public function store(CheckoutStoreRequest $request, CartRepository $cart)
     {
+        $request->validated();
+
         DB::beginTransaction();
 
         try {
@@ -50,6 +53,7 @@ class CheckoutController extends Controller
                 }
             }
 
+            $cart->empty(); // Clear cart
 
             DB::commit(); // All good — save changes
             Loggy::success("Order creatd successfully");
@@ -58,6 +62,6 @@ class CheckoutController extends Controller
             Loggy::error(throw $e);
         }
 
-        return true;
+        return to_route('home');
     }
 }

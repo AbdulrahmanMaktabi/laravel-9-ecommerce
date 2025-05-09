@@ -97,7 +97,7 @@ class CartModelRepository implements CartRepository
         //     ->value('total');
 
         return $this->get()->sum(function ($item) {
-            return $item->qty * $item->product->price;
+            return $item->qty * $item->product?->price;
         });
     }
 

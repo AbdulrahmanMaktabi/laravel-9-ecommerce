@@ -402,7 +402,19 @@
                         <ul class="wsus__menu_item wsus__menu_item_right">
                             <li><a href="contact.html">contact</a></li>
                             <li><a href="dsahboard.html">my account</a></li>
-                            <li><a href="login.html">login</a></li>
+                            @auth
+                                <li>
+                                    <form action="{{ route('logout') }}" method="post" id="myForm">
+                                        @csrf
+                                        <a onclick="event.preventDefault(); document.getElementById('myForm').submit();"
+                                            style="cursor: pointer">
+                                            logout</a>
+                                    </form>
+                                </li>
+                            @endauth
+                            @guest
+                                <li><a href="{{ route('login') }}">login</a></li>
+                            @endguest
                         </ul>
                     </div>
                 </div>
@@ -712,6 +724,26 @@
     <script src="{{ asset('frontend') }}/js/jquery.classycountdown.js"></script>
     <!--main/custom js-->
     <script src="{{ asset('frontend') }}/js/main.js"></script>
+
+    {{-- Notfy --}}
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script>
+        var notyf = new Notyf({
+            duration: 3000,
+            position: {
+                x: 'right',
+                y: 'bottom',
+            },
+        });
+
+        notyf.success("test");
+        notyf.error("session($session)");
+    </script>
+
+
+    {{-- Notifications
+    <x-frontend.notyf-alert session="success" />
+    <x-frontend.notyf-alert session="error" /> --}}
 
 </body>
 

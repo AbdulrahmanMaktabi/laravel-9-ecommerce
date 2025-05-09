@@ -4,13 +4,13 @@
         @forelse ($items as $item)
             <li>
                 <div class="wsus__cart_img">
-                    <a href="#"><img src="{{ $item->product->image }}" alt="{{ $item->product->title }}"
+                    <a href="#"><img src="{{ $item->product?->image }}" alt="{{ $item->product?->title }}"
                             class="img-fluid w-100"></a>
                     <a class="wsis__del_icon" href="#"><i class="fas fa-minus-circle"></i></a>
                 </div>
                 <div class="wsus__cart_text">
-                    <a class="wsus__cart_title" href="#">{{ $item->product->title }}</a>
-                    <p>${{ $item->product->price }}<del>${{ $item->product->compare_price }}</del></p>
+                    <a class="wsus__cart_title" href="#">{{ $item->product?->title }}</a>
+                    <p>${{ $item->product?->price }}<del>${{ $item->product?->compare_price }}</del></p>
                 </div>
             </li>
         @empty

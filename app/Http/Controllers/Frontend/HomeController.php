@@ -15,6 +15,7 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        return view('frontend.home', compact(['products']));
+        return view('frontend.home', compact(['products']))
+            ->with('success', 'success message');
     }
 }
