@@ -37,7 +37,7 @@ class OrderCreatdNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -53,6 +53,21 @@ class OrderCreatdNotification extends Notification
             ->line('The introduction to the notification.')
             ->action('Visit websit', url(env('APP_URL')))
             ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the databse representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        return [
+            'body'          => 'Order Created Successfully | #' . $this->order->number,
+            'icon'          => 'nav-icon bi bi-house-gear-fill',
+            'link'          => url(env('APP_URL'))
+        ];
     }
 
     /**
