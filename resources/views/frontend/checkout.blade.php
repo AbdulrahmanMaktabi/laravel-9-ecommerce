@@ -30,6 +30,13 @@
         <div class="container">
             <form class="wsus__checkout_form" action="{{ route('checkout.store') }}" method="POST">
                 @csrf
+                @if ($errors->any())
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
                 <div class="row">
                     <div class="col-xl-8 col-lg-7">
                         <div class="wsus__check_form">
@@ -315,9 +322,20 @@
                                 <p>tax: <span>$00.00</span></p>
                                 <p><b>total:</b> <span><b>${{ $cart->total() }}</b></span></p>
                             </div>
+                            {{-- Address --}}
+                            <input type="hidden" name="address[shipping][first_name]" value="first">
+                            <input type="hidden" name="address[shipping][last_name]" value="last">
+                            <input type="hidden" name="address[shipping][email]" value="email@example.com">
+                            <input type="hidden" name="address[shipping][phone]" value="123456789">
+                            <input type="hidden" name="address[shipping][city]" value="city">
+                            <input type="hidden" name="address[shipping][street_address]" value="street">
+                            <input type="hidden" name="address[shipping][postal_code]" value="12345">
+                            <input type="hidden" name="address[shipping][state]" value="state">
+                            <input type="hidden" name="address[shipping][country]" value='TR'>
+
                             <div class="terms_area">
                                 <div class="form-check">
-                                    <input class="form-check-input" name="terms" type="checkbox" value=""
+                                    <input class="form-check-input" name="terms" type="checkbox"
                                         id="flexCheckChecked3" checked>
                                     <label class="form-check-label" for="flexCheckChecked3">
                                         I have read and agree to the website <a href="#">terms and conditions

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\OrderCreatedEvent;
 use App\Facades\Loggy;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\CheckoutStoreRequest;
@@ -32,7 +33,8 @@ class CheckoutController extends Controller
                 $order = Order::create([
                     'store_id'       => $store,
                     'user_id'        => $request->user()?->id,
-                    'payment_method' => 'card',
+                    'payment_method' => 'bank_card',
+                    'total'         => $cart->total()
                 ]);
 
                 // Loop through cart items and save each as an order item
@@ -41,7 +43,7 @@ class CheckoutController extends Controller
                         'order_id'       => $order->id,
                         'product_id'     => $item->product?->id,
                         'product_name'   => $item->product?->title,
-                        'product_price'  => $item->product?->price,
+                        'price'  => $item->product?->price,
                         'qty'            => $item->qty,
                     ]);
                 }
@@ -57,6 +59,10 @@ class CheckoutController extends Controller
 
             DB::commit(); // All good — save changes
             Loggy::success("Order creatd successfully");
+
+            event(new OrderCreatedEvent($order));
+
+            return redirect()->route('home')->with('success', 'Order Created Successfully');
         } catch (Throwable $e) {
             DB::rollBack(); // Something failed — undo all DB changes
             Loggy::error(throw $e);

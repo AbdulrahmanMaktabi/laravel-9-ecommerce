@@ -24,7 +24,8 @@ class CheckoutStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'terms'         => ['required', 'in:one,off']
+            'terms'         => ['required', 'in:on,off'],
+            // 'payment_method' => ['required']
         ];
     }
 }
