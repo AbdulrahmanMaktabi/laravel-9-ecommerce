@@ -1,7 +1,5 @@
 @if (session()->has($session))
-    @push('scripts')
-        <script>
-            notyf.{{ $session }}("{{ session($session) }}");
-        </script>
-    @endpush
+    <script>
+        notyf.{{ $session }}("{{ session($session) }}");
+    </script>
 @endif

@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{ asset('frontend') }}/css/style.css">
     <link rel="stylesheet" href="{{ asset('frontend') }}/css/responsive.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 
     <!-- <link rel="stylesheet" href="{{ asset('frontend') }}css/rtl.css"> -->
 </head>
@@ -724,7 +725,6 @@
     <script src="{{ asset('frontend') }}/js/jquery.classycountdown.js"></script>
     <!--main/custom js-->
     <script src="{{ asset('frontend') }}/js/main.js"></script>
-
     {{-- Notfy --}}
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
@@ -735,15 +735,9 @@
                 y: 'bottom',
             },
         });
-
-        notyf.success("test");
-        notyf.error("session($session)");
     </script>
 
-
-    {{-- Notifications
-    <x-frontend.notyf-alert session="success" />
-    <x-frontend.notyf-alert session="error" /> --}}
+    {{ $script ?? '' }}
 
 </body>
 

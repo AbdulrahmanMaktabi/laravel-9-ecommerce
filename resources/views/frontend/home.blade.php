@@ -2131,4 +2131,10 @@
     <!--============================
         HOME BLOGS END
     ==============================-->
+
+    <x-slot name="script">
+        <x-frontend.notyf-alert session="success" />
+        <x-frontend.notyf-alert session="error" />
+    </x-slot>
+
 </x-frontend.layout>
