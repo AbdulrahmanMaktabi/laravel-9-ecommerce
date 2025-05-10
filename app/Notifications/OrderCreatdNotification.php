@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Order;
-
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class OrderCreatdNotification extends Notification
 {
@@ -37,7 +37,7 @@ class OrderCreatdNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return ['mail', 'database', 'broadcast'];
     }
 
     /**
@@ -68,6 +68,22 @@ class OrderCreatdNotification extends Notification
             'icon'          => 'nav-icon bi bi-house-gear-fill',
             'link'          => url(env('APP_URL'))
         ];
+    }
+
+    /**
+     * Get the broadcast representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return object of BroadcastMessage
+     */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'body'          => 'Order Created Successfully | #' . $this->order->number,
+            'icon'          => 'nav-icon bi bi-house-gear-fill',
+            'link'          => url(env('APP_URL')),
+            'message'       => 'Your order has been successfully created! Thank you for shopping with us.'
+        ]);
     }
 
     /**

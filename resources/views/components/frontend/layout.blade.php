@@ -725,17 +725,26 @@
     <script src="{{ asset('frontend') }}/js/jquery.classycountdown.js"></script>
     <!--main/custom js-->
     <script src="{{ asset('frontend') }}/js/main.js"></script>
-    {{-- Notfy --}}
+    {{-- Notyf --}}
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
     <script>
         var notyf = new Notyf({
-            duration: 3000,
+            duration: 10000,
+            dismissible: true,
             position: {
                 x: 'right',
                 y: 'bottom',
             },
         });
     </script>
+
+    <script>
+        const userId = "{{ Auth::id() }}";
+    </script>
+
+    {{-- Your compiled JS --}}
+    @vite(['resources/js/app.js'])
 
     {{ $script ?? '' }}
 

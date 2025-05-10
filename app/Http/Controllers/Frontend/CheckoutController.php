@@ -58,16 +58,18 @@ class CheckoutController extends Controller
             $cart->empty(); // Clear cart
 
             DB::commit(); // All good — save changes
-            Loggy::success("Order creatd successfully");
+
+            Loggy::success("Order creatd successfully | #" . $order->number);
 
             event(new OrderCreatedEvent($order));
 
-            return redirect()->route('home')->with('success', 'Order Created Successfully');
+            return to_route('home');
         } catch (Throwable $e) {
             DB::rollBack(); // Something failed — undo all DB changes
             Loggy::error(throw $e);
+            return redirect()
+                ->route('home')
+                ->with('error', throw $e);
         }
-
-        return to_route('home');
     }
 }
