@@ -28,6 +28,12 @@ class AuthenticateUser
 
         // If user is found and password matches
         if ($user && Hash::check($password, $user->password)) {
+            if ($user->two_factor_secret) {
+                // Trigger 2FA challenge manually
+                session(['login.id' => $user->getKey()]);
+                return null; // Fortify will redirect to /two-factor-challenge
+            }
+
             return $user;
 
             Loggy::success("Log in the user using the 'admin' guard id | #{$user->id}");
