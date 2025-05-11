@@ -6,8 +6,9 @@ use App\Http\Controllers\Backend\DashbaordController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProfileController;
 
-Route::prefix('/dashboard')
-    ->middleware(['auth', 'auth.type:admin,super-admin', 'verified'])
+Route::prefix('/admin/dashboard')
+    // define which guard type
+    ->middleware(['auth:admin'])
     ->group(function () {
         Route::get('/', [DashbaordController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
