@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 // Import custom Fortify action classes
+
+use App\Actions\Fortify\AuthenticateUser;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -57,6 +59,8 @@ class FortifyServiceProvider extends ServiceProvider
         // Custom handler for resetting passwords
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
+        Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
+
         // Rate limiter for login attempts: 5 per minute per IP and username
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(
@@ -80,6 +84,7 @@ class FortifyServiceProvider extends ServiceProvider
             Fortify::viewPrefix('frontend.auth.'); // For frontend views
         else
             Fortify::viewPrefix('auth.'); // For admin or others
+
 
         // Alternatively, you can define each Fortify view separately:
         // Fortify::loginView('auth.login');
