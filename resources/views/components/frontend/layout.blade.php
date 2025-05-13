@@ -44,7 +44,7 @@
                 </div>
                 <div class="col-xl-2 col-7 col-md-8 col-lg-2">
                     <div class="wsus_logo_area">
-                        <a class="wsus__header_logo" href="index.html">
+                        <a class="wsus__header_logo" href="{{ env('APP_URL') }}">
                             <img src="{{ asset('frontend') }}/images/logo_2.png" alt="logo"
                                 class="img-fluid w-100">
                         </a>
@@ -599,7 +599,7 @@
             <div class="row justify-content-between">
                 <div class="col-xl-3 col-sm-7 col-md-6 col-lg-3">
                     <div class="wsus__footer_content">
-                        <a class="wsus__footer_2_logo" href="#">
+                        <a class="wsus__footer_2_logo" href="{{ env('APP_URL') }}">
                             <img src="{{ asset('frontend') }}/images/logo_2.png" alt="logo">
                         </a>
                         <a class="action" href="callto:+8896254857456"><i class="fas fa-phone-alt"></i>

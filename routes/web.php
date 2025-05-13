@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::delete('cart/empty', [CartController::class, 'empty'])->name('cart.empty');
 Route::resource('cart', CartController::class);
 Route::resource('product', Productcontroller::class);
 

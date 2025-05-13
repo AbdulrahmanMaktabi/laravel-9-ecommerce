@@ -32,8 +32,14 @@
                                         </th>
 
                                         <th class="wsus__pro_icon">
-                                            <a href="#" class="common_btn">clear cart</a>
+                                            <form action="{{ route('cart.empty') }}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <input type="submit" value="Clear Cart" class="common_btn">
+                                            </form>
+
                                         </th>
+
                                     </tr>
                                     @forelse ($cart as $item)
                                         <tr class="d-flex">

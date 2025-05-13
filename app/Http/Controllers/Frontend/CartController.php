@@ -63,6 +63,10 @@ class CartController extends Controller
 
     public function empty()
     {
+        if (!$this->cart)
+            return redirect()->back()->with('error', 'No Cart Found');
+
+
         $this->cart->empty();
 
         return redirect()->route('cart.index')
