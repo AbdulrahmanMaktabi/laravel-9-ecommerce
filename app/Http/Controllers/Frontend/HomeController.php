@@ -18,7 +18,7 @@ class HomeController extends Controller
                 'store:id,name'
             ])
             ->active()
-            ->withoutGlobalScope('storeProductsScope')
+            // ->withoutGlobalScope(\App\Models\Scopes\Dashboard\storeProductsScope::class)
             ->take(25)
             ->get();
 

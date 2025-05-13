@@ -8,9 +8,11 @@ Alpine.start();
 
 
 // Rename the channel || replace channel type if private 
+
 var channel = Echo.private(`App.Models.User.${userId}`);
+console.log(channel);
+
 channel.notification(function(data) {
-    console.log(data);
-    alert(data.message);
-    notyf.success(data.message);
+    console.log(data.body);
+    alert("Order Success");
 });

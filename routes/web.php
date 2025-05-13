@@ -27,7 +27,10 @@ Route::delete('cart/empty', [CartController::class, 'empty'])->name('cart.empty'
 Route::resource('cart', CartController::class);
 Route::resource('product', Productcontroller::class);
 
-Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+});
+
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/auth.php';

@@ -99,7 +99,7 @@ class Product extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope(new storeProductsScope());
+        // static::addGlobalScope(new storeProductsScope());
     }
 
     /**
