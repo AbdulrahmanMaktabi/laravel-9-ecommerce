@@ -13,6 +13,5 @@ var channel = Echo.private(`App.Models.User.${userId}`);
 console.log(channel);
 
 channel.notification(function(data) {
-    console.log(data.body);
-    alert("Order Success");
+    notyf.success(data.body);
 });

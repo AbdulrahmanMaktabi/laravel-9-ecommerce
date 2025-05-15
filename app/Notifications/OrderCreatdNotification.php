@@ -37,7 +37,7 @@ class OrderCreatdNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast'];
+        return ['database', 'broadcast'];
     }
 
     /**

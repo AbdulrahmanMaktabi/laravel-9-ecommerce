@@ -63,7 +63,7 @@ class CheckoutController extends Controller
 
             event(new OrderCreatedEvent($order));
 
-            return view('frontend.success_order');
+            return view('frontend.success_order', compact('order'));
         } catch (Throwable $e) {
             DB::rollBack(); // Something failed — undo all DB changes
             Loggy::error(throw $e);

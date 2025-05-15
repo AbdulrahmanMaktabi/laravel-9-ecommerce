@@ -28,8 +28,10 @@ class SendOrderCreatedNotification
      */
     public function handle(OrderCreatedEvent $event)
     {
-        $user = $event->getOrder()->store->user;
+        $storeOwner = $event->getOrder()->store->user;
+        $storeOwner->notify(new OrderCreatdNotification($event->getOrder()));
 
+        $user = $event->getOrder()->user;
         $user->notify(new OrderCreatdNotification($event->getOrder()));
     }
 }
