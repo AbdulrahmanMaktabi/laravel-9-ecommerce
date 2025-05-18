@@ -24,15 +24,17 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::delete('cart/empty', [CartController::class, 'empty'])->name('cart.empty');
 Route::resource('cart', CartController::class);
 Route::resource('product', Productcontroller::class);
 
-Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-
 // Enable two factor authentication
 Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show'])->middleware('auth')->name('two-factor-auth');
-// Route::post('two-factor-auth-chanllenge-enable', [TwoFactorAuthenticatedSessionController::class, 'store'])
-//     ->name('two-factor-auth-chanllenge-enable');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+});
+
 require __DIR__ . '/dashboard.php';
 // require __DIR__ . '/auth.php';
