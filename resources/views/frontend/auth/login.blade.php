@@ -1,8 +1,7 @@
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-    <h1>Dashbaord Login</h1>
-
+    <h1>Ajyal Store Login</h1>
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
