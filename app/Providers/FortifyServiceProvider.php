@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Features;
+use Laravel\Fortify\Contracts\LoginResponse;
+
+use App\Models\Admin;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -47,6 +51,17 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // dd(Config::get('fortify.guard'));
+
+        // Set the Fortify route prefix to 'admin'
+        // dd(Config::get('fortify.prefix'));
+
+        // Set the password broker to use 'admins'
+        // dd(Config::get('fortify.passwords'));
+
+        // Set the post-login redirection for admins
+        // dd(Config::get('fortify.home'));
+
         // Tell Fortify to use a custom class to create users
         Fortify::createUsersUsing(CreateNewUser::class);
 
@@ -84,7 +99,6 @@ class FortifyServiceProvider extends ServiceProvider
             Fortify::viewPrefix('frontend.auth.'); // For frontend views
         else
             Fortify::viewPrefix('auth.'); // For admin or others
-
 
         // Alternatively, you can define each Fortify view separately:
         // Fortify::loginView('auth.login');

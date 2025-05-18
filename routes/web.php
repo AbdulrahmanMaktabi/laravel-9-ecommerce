@@ -11,7 +11,7 @@ use App\Http\Controllers\Frontend\Productcontroller;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
-
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +31,8 @@ Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.c
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 // Enable two factor authentication
-Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show']);
+Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show'])->middleware('auth')->name('two-factor-auth');
+// Route::post('two-factor-auth-chanllenge-enable', [TwoFactorAuthenticatedSessionController::class, 'store'])
+//     ->name('two-factor-auth-chanllenge-enable');
 require __DIR__ . '/dashboard.php';
 // require __DIR__ . '/auth.php';

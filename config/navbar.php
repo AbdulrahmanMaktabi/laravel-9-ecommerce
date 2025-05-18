@@ -7,6 +7,19 @@ return [
         'route'         => 'dashboard',
     ],
     [
+        'title'         => 'Settings',
+        'icon'          => 'bi bi-gear-fill',
+        'route'         => '#',
+        'childrens'     =>
+        [
+            [
+                'title' => '2FA',
+                'icon'  => 'bi bi-shield-lock',
+                'route' => 'two-factor-auth',
+            ]
+        ]
+    ],
+    [
         'title'     => 'Products',
         'icon'      => 'bi bi-shop',
         'route'      => 'products.index',

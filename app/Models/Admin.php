@@ -12,5 +12,7 @@ class Admin extends User
 {
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
+    protected $table = 'admins';
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 }
