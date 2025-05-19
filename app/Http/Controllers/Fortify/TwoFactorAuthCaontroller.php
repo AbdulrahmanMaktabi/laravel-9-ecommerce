@@ -12,6 +12,7 @@ class TwoFactorAuthCaontroller extends Controller
     public function show()
     {
         $user = Auth::guard(Config::get('fortify.guard'))->user();
+
         return view('two-factor', compact('user'));
     }
 }

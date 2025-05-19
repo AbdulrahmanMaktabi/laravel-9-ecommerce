@@ -87,7 +87,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         // Rate limiter for two-factor authentication: 5 per minute per session
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+            return Limit::perMinute(2)->by($request->session()->get('login.id'));
         });
 
         /**

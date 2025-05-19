@@ -15,7 +15,7 @@ return [
             [
                 'title' => '2FA',
                 'icon'  => 'bi bi-shield-lock',
-                'route' => 'two-factor-auth',
+                'route' => 'admin.two-factor-auth',
             ]
         ]
     ],

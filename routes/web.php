@@ -29,7 +29,7 @@ Route::resource('cart', CartController::class);
 Route::resource('product', Productcontroller::class);
 
 // Enable two factor authentication
-Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show'])->middleware('auth')->name('two-factor-auth');
+Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show'])->middleware("auth:web")->name('two-factor-auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
