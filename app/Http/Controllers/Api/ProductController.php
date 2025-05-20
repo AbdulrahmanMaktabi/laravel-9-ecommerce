@@ -17,7 +17,7 @@ use App\Models\Tag;
 use App\Models\Store;
 use App\Models\Category;
 use Exception;
-
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -136,7 +136,12 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $product = Product::where('id', $id)->firstOrFail();
+            return new ProductResource($product);
+        } catch (Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     /**
