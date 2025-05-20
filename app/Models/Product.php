@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Scopes\Dashboard\storeProductsScope;
+use App\Observers\ProductObserver;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -139,6 +140,7 @@ class Product extends Model
     protected static function booted()
     {
         // static::addGlobalScope(new storeProductsScope());
+        Product::observe(ProductObserver::class);
     }
 
     /**
@@ -148,6 +150,7 @@ class Product extends Model
     {
         if (!$this->image)
             return "https://tinasbotanicals.com/wp-content/uploads/2025/01/No-Product-Image-Available.png";
+
         if (Str::startsWith($this->image, ['https://', 'http://']))
             return $this->image;
 

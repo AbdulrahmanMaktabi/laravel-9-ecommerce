@@ -33,6 +33,7 @@ class ProductStoreRequest extends FormRequest
             "description"       => ['required'],
             "price"             => ['required', 'numeric'],
             "compare_price"     => ['nullable', 'numeric', 'lt:price'],
+            "qty"               => ['required', 'numeric', 'gt:0'],
             "status"            => ['required', 'in:active,inactive,arshived,draft'],
             "meta_title"        => ['nullable'],
             "meta_links"        => ['nullable'],
