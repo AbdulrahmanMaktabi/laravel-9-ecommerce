@@ -15,6 +15,7 @@ use App\Models\Category;
 use App\Models\Media as ModelMedia;
 use App\Models\Store;
 use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -31,7 +32,7 @@ class ProductController extends Controller
 
         if (!$products) {
             Loggy::error('Can`t load products');
-            return redirect()->back()->while('error', 'can`t load products');
+            return redirect()->back()->whith('error', 'can`t load products');
         }
 
         return view('dashboard.sections.products.index', get_defined_vars());
@@ -51,7 +52,7 @@ class ProductController extends Controller
 
         if (!$products) {
             Loggy::error('Can`t load products');
-            return redirect()->back()->while('error', 'can`t load products');
+            return redirect()->back()->whith('error', 'can`t load products');
         }
 
         return view('dashboard.sections.products.trashed', get_defined_vars());
@@ -90,76 +91,84 @@ class ProductController extends Controller
     public function store(ProductStoreRequest $request)
     {
         $request->validated();
-        $tags = explode(',', $request->input('tags'));
-        $tags_ids = [];
-        foreach ($tags as $tagName) {
-            if (strlen($tagName) == 0) continue;
-
-            $tag = Tag::updateOrCreate(
-                ['slug' => Str::slug($tagName)],
-                [
-                    'name'      => $tagName,
-                    'slug'      => Str::slug($tagName)
-                ]
-            );
-            $tags_ids[] = $tag->id;
-        }
-
-        $imageLocation = Media::uploadImage($request, 'image', 'uploads/products', 'products');
-
-        if (!$imageLocation) {
-            Loggy::error('can not upload Image');
-            return redirect()->route('products.index')->with('error', 'can not upload the image!');
-        }
-
-        if ($request->has('images')) {
-            $locations = Media::uploadMultiImages($request, 'images');
-
-            if (!$locations) {
-                Loggy::error('Error while uploading product images');
-                return redirect()->back()->with('error', 'Error while uploading product images');
-            }
-
-            $images_ids = [];
-            foreach ($locations as $location) {
-                $media = ModelMedia::create(['location' => $location]);
-                $images_ids[] = $media->id;
-            }
-        }
-
         try {
-            $featured = $request->input('featured') == 'on' ?  1 : 0;
+            DB::beginTransaction();
+            $tags = explode(',', $request->input('tags'));
+            $tags_ids = [];
+            foreach ($tags as $tagName) {
+                if (strlen($tagName) == 0) continue;
 
-            $product = Product::create([
-                'store_id'          => Store::where('slug', $request->store)->value('id'),
-                'category_id'       => Category::where('slug', $request->category)->value('id'),
-                'title'             => $request->title,
-                'slug'              => Str::slug($request->title),
-                'small_description' => $request->small_description,
-                'description'       => $request->description,
-                'price'             => $request->price,
-                'compare_price'     => $request->compare_price,
-                'status'            => $request->status,
-                'meta_title'        => $request->meta_title,
-                'meta_links'        => $request->meta_links,
-                'meta_description'  => $request->meta_description,
-                'image'             => $imageLocation,
-                'featured'          => $featured
+                $tag = Tag::firstOrCreate(
+                    ['slug' => Str::slug($tagName)],
+                    [
+                        'name'      => $tagName,
+                        'slug'      => Str::slug($tagName)
+                    ]
+                );
+                $tags_ids[] = $tag->id;
+            }
 
-            ]);
+            $imageLocation = Media::uploadImage($request, 'image', 'uploads/products', 'products');
 
-            // The sync() method in Laravel is used to synchronize many-to-many relationships
-            $product->tags()->sync($tags_ids);
-            // attach() adds new records to the pivot table without removing existing ones
-            $product->media()->attach($images_ids);
+            if (!$imageLocation) {
+                Loggy::error('can not upload Image');
+                return redirect()->route('products.index')->with('error', 'can not upload the image!');
+            }
 
-            Loggy::success("Product Created Successfully , " . $product);
-        } catch (Exception $e) {
+            if ($request->has('images')) {
+                $locations = Media::uploadMultiImages($request, 'images');
+
+                if (!$locations) {
+                    Loggy::error('Error while uploading product images');
+                    return redirect()->back()->with('error', 'Error while uploading product images');
+                }
+
+                $images_ids = [];
+                foreach ($locations as $location) {
+                    $media = ModelMedia::create(['location' => $location]);
+                    $images_ids[] = $media->id;
+                }
+            }
+
+            try {
+                $featured = $request->input('featured') == 'on' ?  1 : 0;
+
+                $product = Product::create([
+                    'store_id'          => Store::where('slug', $request->store)->value('id'),
+                    'category_id'       => Category::where('slug', $request->category)->value('id'),
+                    'title'             => $request->title,
+                    'slug'              => Str::slug($request->title),
+                    'small_description' => $request->small_description,
+                    'description'       => $request->description,
+                    'price'             => $request->price,
+                    'compare_price'     => $request->compare_price,
+                    'status'            => $request->status,
+                    'meta_title'        => $request->meta_title,
+                    'meta_links'        => $request->meta_links,
+                    'meta_description'  => $request->meta_description,
+                    'image'             => $imageLocation,
+                    'featured'          => $featured
+
+                ]);
+
+                // The sync() method in Laravel is used to synchronize many-to-many relationships
+                $product->tags()->sync($tags_ids);
+                // attach() adds new records to the pivot table without removing existing ones
+                $product->media()->attach($images_ids);
+
+                Loggy::success("Product Created Successfully , " . $product);
+            } catch (Exception $e) {
+                Loggy::error($e->getMessage());
+                return redirect()->route('products.index')->with('error', $e->getMessage());
+            }
+
+            DB::commit();
+            return redirect()->route('products.index')->with('success', 'Product Created Successfully');
+        } catch (\Throwable $e) {
+            DB::rollBack();
             Loggy::error($e->getMessage());
-            return redirect()->route('products.index')->with('error', $e->getMessage());
+            return redirect()->route('products.index')->with('error', 'Something went wrong!');
         }
-
-        return redirect()->route('products.index')->with('success', 'Product Created Successfully');
     }
 
     /**
@@ -209,7 +218,7 @@ class ProductController extends Controller
         foreach ($tags as $tagName) {
             if (strlen($tagName) == 0) continue;
 
-            $tag = Tag::updateOrCreate(
+            $tag = Tag::firstOrCreate(
                 ['slug' => Str::slug($tagName)],
                 [
                     'name'      => $tagName,

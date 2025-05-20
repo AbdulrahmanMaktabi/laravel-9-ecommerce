@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Scopes\Dashboard\storeProductsScope;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -15,6 +16,10 @@ class Product extends Model
     protected $table = 'products';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at', 'image'];
+
+    protected $appends = ['imageUrl'];
 
     /**
      * Relation with stores table
@@ -67,13 +72,47 @@ class Product extends Model
      */
     public function scopeFilter($query, $filters)
     {
-        if ($filters['title'] ?? false) {
-            $query->where('title', 'LIKE', "%{$filters['title']}%");
-        }
+        $options = array_merge([
+            'store_id' => null,
+            'category_id' => null,
+            'title' => null,
+            'status' => null,
+            'tag_id' => null
+        ], $filters);
 
-        if ($filters['status'] ?? false) {
-            $query->whereStatus($filters['status']);
-        }
+        $query->when($options['store_id'], function ($query) use ($options) {
+            $query->where('store_id', $options['store_id']);
+        });
+
+        $query->when($options['category_id'], function ($query) use ($options) {
+            $query->where('category_id', $options['category_id']);
+        });
+
+        $query->when($options['title'], function ($query) use ($options) {
+            $query->where('title', 'LIKE', "%{$options['title']}%");
+        });
+
+        $query->when($options['status'], function ($query) use ($options) {
+            $query->where('status', $options['status']);
+        });
+
+        $query->when($options['tag_id'], function ($query) use ($options) {
+            // $query->whereHas('tags', function ($query) use ($options) {
+            //     $query->where('tag_id', $options['tag_id']);
+            // });
+
+            // $query->whereRaw(
+            //     'Exists (SELECT 1 FROM product_tag where product_id = products.id AND tag_id = ?',
+            //     [$options['tag_id']]
+            // );
+
+            $query->whereExists(function ($query) use ($options) {
+                $query->select(DB::raw(1))
+                    ->from('product_tag')
+                    ->whereRaw('product_tag.product_id = products.id')
+                    ->where('tag_id', $options['tag_id']);
+            });
+        });
 
         return $query;
     }
