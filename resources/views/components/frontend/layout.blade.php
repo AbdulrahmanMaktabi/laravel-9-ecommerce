@@ -401,7 +401,26 @@
                             <li><a href="daily_deals.html">daily deals</a></li>
                         </ul>
                         <ul class="wsus__menu_item wsus__menu_item_right">
-                            <li><a href="contact.html">contact</a></li>
+                            <li>
+                                <form action="{{ route('currencyConverter') }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    <select name="currency_code" onchange="this.form.submit()"
+                                        style="background: transparent; border: none; color: inherit;">
+                                        <option disabled selected>Choose Currency</option>
+                                        <option value="USD" @selected('USD' == session('currency_code'))>USD – US Dollar</option>
+                                        <option value="EUR" @selected('EUR' == session('currency_code'))>EUR – Euro</option>
+                                        <option value="GBP" @selected('GBP' == session('currency_code'))>GBP – British Pound
+                                        </option>
+                                        <option value="JPY" @selected('JPY' == session('currency_code'))>JPY – Japanese Yen</option>
+                                        <option value="CNY" @selected('CNY' == session('currency_code'))>CNY – Chinese Yuan</option>
+                                        <option value="AED" @selected('AED' == session('currency_code'))>AED – UAE Dirham</option>
+                                        <option value="SAR" @selected('SAR' == session('currency_code'))>SAR – Saudi Riyal</option>
+                                        <option value="TRY" @selected('TRY' == session('currency_code'))>TRY – Turkish Lira</option>
+                                        <option value="SYP" @selected('SYP' == session('currency_code'))>SYP – Syrian Pound</option>
+                                        <option value="INR" @selected('INR' == session('currency_code'))>INR – Indian Rupee</option>
+                                    </select>
+                                </form>
+                            </li>
                             <li><a href="dsahboard.html">my account</a></li>
                             @auth
                                 <li>

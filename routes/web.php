@@ -9,6 +9,7 @@ use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\Productcontroller;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\CurrencyConverterController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
+
+Route::post('currency-converter',  [CurrencyConverterController::class, 'calculateRate'])->name('currencyConverter');
 
 require __DIR__ . '/dashboard.php';
 // require __DIR__ . '/auth.php';
