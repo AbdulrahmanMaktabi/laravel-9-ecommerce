@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
+use App\Services\CurrencyConverterApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,5 @@ Route::apiResource('products', ProductController::class);
 Route::post('auth', [AuthController::class, 'store']);
 Route::delete('auth', [AuthController::class, 'delete']);
 Route::delete('auth/destroy', [AuthController::class, 'destroy']);
+
+Route::get('currency', [CurrencyConverterApiService::class, 'auth']);

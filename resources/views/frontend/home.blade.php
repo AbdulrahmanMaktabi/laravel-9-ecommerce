@@ -1,3 +1,6 @@
+@php
+    use App\Facades\CurrencyConverter;
+@endphp
 <x-frontend.layout title="Home page">
     <!--==========================
       PRODUCT MODAL VIEW START
@@ -250,7 +253,8 @@
                                     <span>(133 review)</span>
                                 </p>
                                 <a class="wsus__pro_name" href="#">{{ $product->title }}</a>
-                                <p class="wsus__price">${{ $product->compare_price }}
+                                <p class="wsus__price">
+                                    ${{ CurrencyConverter::convert('USD', 'SYP', $product->compare_price) }}
                                     <del>${{ $product->price }}</del>
                                 </p>
                                 <form action="{{ route('cart.store', $product->id) }}" method="post">
