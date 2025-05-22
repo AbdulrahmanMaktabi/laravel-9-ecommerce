@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\Currency;
 use App\Services\CurrencyConverterApiService;
 use App\Services\LogService;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('currencyConverter', function ($app) {
             return new CurrencyConverterApiService();
+        });
+
+        $this->app->singleton('currencyFormatter', function ($app) {
+            return new Currency();
         });
     }
 

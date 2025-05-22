@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Currency;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -217,6 +218,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         // 'Media'     => App\Facades\MediaFacade::class,
+        'Currency'          => App\Facades\CurrencyFormatter::class,
     ])->toArray(),
 
 ];

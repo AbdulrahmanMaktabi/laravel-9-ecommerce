@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Session;
 
 class Currency
 {
-    public function __construct(...$parms)
-    {
-        static::format(...$parms);
-    }
-
     public static function format($amount, $currency = null)
     {
         $formatter = new \NumberFormatter(config('app.locale'), \NumberFormatter::CURRENCY);
