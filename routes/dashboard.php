@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashbaordController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProfileController;
+use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Fortify\TwoFactorAuthCaontroller;
 
 Route::prefix('/admin/dashboard')
@@ -26,6 +27,9 @@ Route::prefix('/admin/dashboard')
         Route::delete('products/{category}/force-delete', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
         Route::resource('products', ProductController::class)->except('show');
         Route::put('product/update/status/to/archived/{category}', [ProductController::class, 'updateStatusToArchived'])->name('products.updateStatusToArchived');
+
+        // Roles Routes
+        Route::resource('roles', RolesController::class);
 
         // Profile Routes
         Route::get('profile/{user}', [ProfileController::class, 'edit'])->name('profile.edit');

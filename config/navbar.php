@@ -65,4 +65,21 @@ return [
             ]
         ],
     ],
+    [
+        'title'     => 'Roles',
+        'icon'      => 'bi bi-lock-fill',
+        'route'      => 'roles.index',
+        'childrens' => [
+            [
+                'title'     => 'All',
+                'icon'      => 'bi bi-lock-fill',
+                'route'      => 'roles.index',
+            ],
+            [
+                'title'     => 'Create',
+                'icon'      => 'bi bi-lock-fill',
+                'route'      => 'roles.create',
+            ],
+        ]
+    ],
 ];
