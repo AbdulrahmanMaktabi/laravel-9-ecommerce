@@ -13,6 +13,8 @@ use App\Http\Controllers\Frontend\CurrencyConverterController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,20 +26,27 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::delete('cart/empty', [CartController::class, 'empty'])->name('cart.empty');
-Route::resource('cart', CartController::class);
-Route::resource('product', Productcontroller::class);
 
-// Enable two factor authentication
-Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show'])->middleware("auth:web")->name('two-factor-auth');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::delete('cart/empty', [CartController::class, 'empty'])->name('cart.empty');
+    Route::resource('cart', CartController::class);
+    Route::resource('product', Productcontroller::class);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    // Enable two factor authentication
+    Route::get('two-factor-auth', [TwoFactorAuthCaontroller::class, 'show'])->middleware("auth:web")->name('two-factor-auth');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+        Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    });
+
+    Route::post('currency-converter',  [CurrencyConverterController::class, 'calculateRate'])->name('currencyConverter');
+
+    require __DIR__ . '/dashboard.php';
+    // require __DIR__ . '/auth.php';
+
 });
-
-Route::post('currency-converter',  [CurrencyConverterController::class, 'calculateRate'])->name('currencyConverter');
-
-require __DIR__ . '/dashboard.php';
-// require __DIR__ . '/auth.php';

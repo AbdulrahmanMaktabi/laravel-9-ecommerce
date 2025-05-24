@@ -309,7 +309,7 @@
                         </ul>
 
                         <ul class="wsus__menu_item">
-                            <li><a class="active" href="index.html">home</a></li>
+                            <li><a class="active" href="index.html">{{ __('home') }}</a></li>
                             <li><a href="product_grid_view.html">shop <i class="fas fa-caret-down"></i></a>
                                 <div class="wsus__mega_menu">
                                     <div class="row">
@@ -421,7 +421,23 @@
                                     </select>
                                 </form>
                             </li>
-                            <li><a href="dsahboard.html">my account</a></li>
+                            {{-- <li><a href="dsahboard.html">my account</a></li> --}}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown"
+                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ LaravelLocalization::getCurrentLocaleNative() }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                    @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                        <li>
+                                            <a class="dropdown-item" rel="alternate" hreflang="{{ $localeCode }}"
+                                                href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                                {{ $properties['native'] }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
                             @auth
                                 <li>
                                     <form action="{{ route('logout') }}" method="post" id="myForm">
