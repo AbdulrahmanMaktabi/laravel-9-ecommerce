@@ -19,6 +19,16 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Product::class, 'product', [
+            'create' => 'products.create',
+            'viewAny' => 'products.viewAny',
+            'view' => 'products.view',
+            'update' => 'products.update',
+            'delete' => 'products.delete',
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
