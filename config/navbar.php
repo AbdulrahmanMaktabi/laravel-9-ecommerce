@@ -66,6 +66,24 @@ return [
         ],
     ],
     [
+        'title'     => 'Users',
+        'icon'      => 'bi bi-people',
+        'route'      => 'users..index',
+        'childrens' => [
+            [
+                'title'     => 'Users',
+                'icon'      => 'bi bi-people',
+                'route'      => 'users.index',
+            ],
+            [
+                'title'     => 'Admins',
+                'icon'      => 'bi bi-person-up',
+                'route'      => 'admins.index',
+            ],
+
+        ]
+    ],
+    [
         'title'     => 'Roles',
         'icon'      => 'bi bi-lock-fill',
         'route'      => 'roles.index',

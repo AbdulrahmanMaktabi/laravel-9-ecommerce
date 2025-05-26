@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashbaordController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Fortify\TwoFactorAuthCaontroller;
 
 Route::prefix('/admin/dashboard')
@@ -30,6 +32,12 @@ Route::prefix('/admin/dashboard')
 
         // Roles Routes
         Route::resource('roles', RoleController::class);
+
+        // Users Routes
+        Route::resource('users', UserController::class)->except(['create', 'store']);
+
+        // Admins Routes
+        Route::resource('admins', AdminController::class)->except(['create', 'store']);
 
         // Profile Routes
         Route::get('profile/{user}', [ProfileController::class, 'edit'])->name('profile.edit');

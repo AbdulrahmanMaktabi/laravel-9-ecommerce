@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
         //     'password'      => Hash::make('secret'),
         // ]);
 
-        Admin::factory(20)->create();
+        // Admin::factory(20)->create();
+
+        // $this->run(UsersSlugsSeed::class);
     }
 }

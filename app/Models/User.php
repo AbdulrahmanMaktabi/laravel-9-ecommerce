@@ -11,21 +11,24 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Concerns\HasFilter;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable, HasFilter;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    // protected $fillable = [
+    //     'name',
+    //     'email',
+    //     'password',
+    // ];
+
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -45,6 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'updated_at'
 
     ];
+
 
     /**
      * The attributes that should be cast.
@@ -70,5 +74,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Profile::class)
             ->withDefault();
+    }
+
+    /**
+     * Call with slug 
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }
