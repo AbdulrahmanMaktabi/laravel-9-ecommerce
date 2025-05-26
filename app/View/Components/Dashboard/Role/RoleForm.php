@@ -16,14 +16,17 @@ class RoleForm extends Component
     public $method;
     public $route;
     public $button;
+    public $abilites = null;
 
-    public function __construct(Role $role, $method = '', $route, $button = 'Create')
+    public function __construct($role = null, $abilites = null, $method = '', $route, $button = 'Create')
     {
         $this->role = $role ?? new Role();
         $this->method = $method;
         $this->route = $route;
         $this->button = $button;
+        $this->abilites = $abilites;
     }
+
     /**
      * Get the view / contents that represent the component.
      *

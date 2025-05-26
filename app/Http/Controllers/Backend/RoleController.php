@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
-class RolesController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -39,7 +39,7 @@ class RolesController extends Controller
     {
         Role::createWithAbilities($request);
 
-        return redirect()->back()->with('success', 'Role created successfully');
+        return to_route('roles.index')->with('success', 'Role created successfully');
     }
 
     /**
@@ -62,7 +62,9 @@ class RolesController extends Controller
     public function edit($id)
     {
         $role = Role::findOrFail($id);
-        return view('dashboard.sections.roles.edit', compact(['role']));
+        $roleAbilities = $role->abilities()->pluck('type', 'ability')->toArray();
+
+        return view('dashboard.sections.roles.edit', compact(['role', 'roleAbilities']));
     }
 
     /**

@@ -73,4 +73,9 @@ class Role extends Model
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function abilities()
+    {
+        return $this->hasMany(RoleAbility::class);
+    }
 }

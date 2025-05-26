@@ -16,7 +16,7 @@
                 <div class="card-title">Edit Category</div>
             </div>
 
-            <x-dashboard.role.role-form method="PUT" route="update" :role="$role" />
+            <x-dashboard.role.role-form method="PUT" route="update" :role="$role" :abilites="$roleAbilities" />
 
         </div>
 

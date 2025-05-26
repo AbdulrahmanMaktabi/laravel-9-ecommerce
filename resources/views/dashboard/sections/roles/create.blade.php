@@ -16,7 +16,7 @@
                 <div class="card-title">Create Category</div>
             </div>
 
-            <x-dashboard.role.role-form method="POST" route="store" />
+            <x-dashboard.role.role-form method="POST" route="store" :role="null" :abilites="null" />
 
         </div>
 

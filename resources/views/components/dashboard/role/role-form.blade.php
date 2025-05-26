@@ -30,15 +30,15 @@
                             <td>{{ ucfirst(str_replace('_', ' ', $ability)) }}</td>
                             <td class="text-center">
                                 <input type="radio" name="abilities[{{ $ability_key }}]" value="allow"
-                                    {{ old("abilities.$ability") == 'allow' ? 'checked' : '' }}>
+                                    @checked(isset($abilites[$ability_key]) && $abilites[$ability_key] == 'allow')>
                             </td>
                             <td class="text-center">
                                 <input type="radio" name="abilities[{{ $ability_key }}]" value="deny"
-                                    {{ old("abilities.$ability") == 'deny' ? 'checked' : '' }}>
+                                    @checked(isset($abilites[$ability_key]) && $abilites[$ability_key] == 'deny')>
                             </td>
                             <td class="text-center">
                                 <input type="radio" name="abilities[{{ $ability_key }}]" value="inherit"
-                                    {{ old("abilities.$ability", 'inherit') == 'inherit' ? 'checked' : '' }}>
+                                    @checked(isset($abilites[$ability_key]) && $abilites[$ability_key] == 'inherit')>
                             </td>
                         </tr>
                     @endforeach
