@@ -13,7 +13,9 @@
             <div class="card-header">
                 <h3 class="card-title">Categories List</h3>
                 <div class="card-tools">
-                    <a href="{{ route('categories.create') }}" class="btn btn-success btn-sm">create</a>
+                    @can('create', $category)
+                        <a href="{{ route('categories.create') }}" class="btn btn-success btn-sm">create</a>
+                    @endcan
                 </div>
             </div>
             <!-- /.card-header -->
@@ -80,22 +82,26 @@
 
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('categories.edit', $category) }}"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('categories.destroy', $category) }}" method="POST">
-                                            @csrf
-                                            @method('delete')
-                                            <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
-                                                value="Delete" />
-                                        </form>
-                                        <form action="{{ route('categories.updateStatusToArchived', $category) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('put')
-                                            <input type="submit" class="btn btn-warning btn-sm"
-                                                style="border-top-left-radius:0;border-bottom-left-radius:0;"
-                                                value="Archive" />
-                                        </form>
+                                        @canany(['edit', 'update'], $categroy)
+                                            <a href="{{ route('categories.edit', $category) }}"
+                                                class="btn btn-primary btn-sm">Edit</a>
+                                        @endcanany
+                                        @can('delete', $category)
+                                            <form action="{{ route('categories.destroy', $category) }}" method="POST">
+                                                @csrf
+                                                @method('delete')
+                                                <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
+                                                    value="Delete" />
+                                            </form>
+                                            <form action="{{ route('categories.updateStatusToArchived', $category) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('put')
+                                                <input type="submit" class="btn btn-warning btn-sm"
+                                                    style="border-top-left-radius:0;border-bottom-left-radius:0;"
+                                                    value="Archive" />
+                                            </form>
+                                        @endcan
                                     </div>
 
                                 </td>

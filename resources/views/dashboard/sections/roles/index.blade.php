@@ -34,19 +34,19 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $role->name }}</td>
 
-
-
-
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('roles.edit', $role->id) }}"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('roles.destroy', $role) }}" method="POST">
-                                            @csrf
-                                            @method('delete')
-                                            <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
-                                                value="Delete" />
-                                        </form>
+                                        @canany(['edit', 'update'], $role)
+                                            <a href="{{ route('roles.edit', $role) }}" class="btn btn-primary btn-sm">Edit</a>
+                                        @endcanany
+                                        @can('delete', $role)
+                                            <form action="{{ route('roles.destroy', $role) }}" method="POST">
+                                                @csrf
+                                                @method('delete')
+                                                <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
+                                                    value="Delete" />
+                                            </form>
+                                        @endcan
 
                                     </div>
 

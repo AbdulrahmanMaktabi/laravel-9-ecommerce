@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class Role extends Model
 {
@@ -77,5 +79,11 @@ class Role extends Model
     public function abilities()
     {
         return $this->hasMany(RoleAbility::class);
+    }
+
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 }

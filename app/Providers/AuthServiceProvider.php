@@ -16,6 +16,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
+        // 'App\Models\Product' => 'App\Policies\ProductPolicy',
+        // 'App\Models\Role' => 'App\Policies\ModelPolicy',
+        // 'App\Models\User' => 'App\Policies\ModelPolicy',
+        // 'App\Models\Category' => 'App\Policies\ModelPolicy',
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
@@ -28,14 +32,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::before(function ($user, $ability) {
-            if ($user->super_admin) return true;
-        });
+        // Gate::before(function ($user, $ability) {
+        //     if ($user->super_admin) return true;
+        // });
 
-        foreach (config('abilities') as $ability_key => $ability) {
-            Gate::define($ability_key, function ($user) use ($ability_key) {
-                return $user->hasAbility($ability_key);
-            });
-        }
+        // foreach (config('abilities') as $ability_key => $ability) {
+        //     Gate::define($ability_key, function ($user) use ($ability_key) {
+        //         return $user->hasAbility($ability_key);
+        //     });
+        // }
     }
 }

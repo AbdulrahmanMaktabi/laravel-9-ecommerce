@@ -74,16 +74,22 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('admins.edit', $admin) }}"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <a href="{{ route('admins.show', $admin) }}"
-                                            class="btn btn-warning btn-sm">Show</a>
-                                        <form action="{{ route('admins.destroy', $admin) }}" method="POST">
-                                            @csrf
-                                            @method('delete')
-                                            <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
-                                                value="Delete" />
-                                        </form>
+                                        @canany(['edit', 'update'], $admin)
+                                            <a href="{{ route('admins.edit', $admin) }}"
+                                                class="btn btn-primary btn-sm">Edit</a>
+                                        @endcanany
+                                        @can('view', $admin)
+                                            <a href="{{ route('admins.show', $admin) }}"
+                                                class="btn btn-warning btn-sm">Show</a>
+                                        @endcan
+                                        @can('delete', $admin)
+                                            <form action="{{ route('admins.destroy', $admin) }}" method="POST">
+                                                @csrf
+                                                @method('delete')
+                                                <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
+                                                    value="Delete" />
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

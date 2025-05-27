@@ -84,22 +84,26 @@
 
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('products.edit', $product) }}"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('products.destroy', $product) }}" method="POST">
-                                            @csrf
-                                            @method('delete')
-                                            <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
-                                                value="Delete" />
-                                        </form>
-                                        <form action="{{ route('categories.updateStatusToArchived', $product->category) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('put')
-                                            <input type="submit" class="btn btn-warning btn-sm"
-                                                style="border-top-left-radius:0;border-bottom-left-radius:0;"
-                                                value="Archive" />
-                                        </form>
+                                        @canany(['edit', 'update'], $product)
+                                            <a href="{{ route('products.edit', $product) }}"
+                                                class="btn btn-primary btn-sm">Edit</a>
+                                        @endcanany
+                                        @can('delete', $product)
+                                            <form action="{{ route('products.destroy', $product) }}" method="POST">
+                                                @csrf
+                                                @method('delete')
+                                                <input type="submit" class="btn btn-danger btn-sm" style="border-radius:0;"
+                                                    value="Delete" />
+                                            </form>
+                                            <form action="{{ route('categories.updateStatusToArchived', $product->category) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('put')
+                                                <input type="submit" class="btn btn-warning btn-sm"
+                                                    style="border-top-left-radius:0;border-bottom-left-radius:0;"
+                                                    value="Archive" />
+                                            </form>
+                                        @endcan
                                     </div>
 
                                 </td>

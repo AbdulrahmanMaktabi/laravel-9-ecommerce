@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Facades\Loggy;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\User;
 use App\Models\Role;
 use Exception;
@@ -13,6 +14,10 @@ use function PHPUnit\Framework\isEmpty;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
     /**
      * Display a listing of the resource.
      *

@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Role::class, 'role');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -59,9 +64,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $role = Role::findOrFail($id);
+        // $role = Role::findOrFail($id);
         $roleAbilities = $role->abilities()->pluck('type', 'ability')->toArray();
 
         return view('dashboard.sections.roles.edit', compact(['role', 'roleAbilities']));

@@ -21,13 +21,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Product::class, 'product', [
-            'create' => 'products.create',
-            'viewAny' => 'products.viewAny',
-            'view' => 'products.view',
-            'update' => 'products.update',
-            'delete' => 'products.delete',
-        ]);
+        $this->authorizeResource(Product::class, 'product');
     }
     /**
      * Display a listing of the resource.
