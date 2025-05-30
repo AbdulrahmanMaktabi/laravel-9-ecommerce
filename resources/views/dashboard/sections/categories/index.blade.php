@@ -13,7 +13,7 @@
             <div class="card-header">
                 <h3 class="card-title">Categories List</h3>
                 <div class="card-tools">
-                    @can('create', $category)
+                    @can('create')
                         <a href="{{ route('categories.create') }}" class="btn btn-success btn-sm">create</a>
                     @endcan
                 </div>
@@ -82,7 +82,7 @@
 
                                 <td>
                                     <div class="btn-group" role="group">
-                                        @canany(['edit', 'update'], $categroy)
+                                        @canany(['edit', 'update'], $category)
                                             <a href="{{ route('categories.edit', $category) }}"
                                                 class="btn btn-primary btn-sm">Edit</a>
                                         @endcanany

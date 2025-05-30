@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use App\Facades\Loggy;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -44,7 +46,11 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            Loggy::error($e->getMessage());
+        });
+
+        $this->reportable(function (QueryException $e) {
+            Loggy::error($e->getMessage());
         });
     }
 }
